@@ -9,8 +9,8 @@ arthur-korn
 ghjcnj12
 
 // глобально
-$ git config --global user.name "John Doe"
-$ git config --global user.email johndoe@example.com
+$ git config --global user.name "Oleksii Brylin"
+$ git config --global user.email alex.brilin@gmail.com
 
 // не глобально
 $ git config user.name "John Doe"
@@ -19,3 +19,6 @@ $ git config user.email johndoe@example.com
 
 // для копирования репозитория
 git clone https://github.com/olegwn/play-to-flirt.git
+
+git remote -v //имя удаленных серверов
+remote add library https://github.com/OleksiiBrylin/myLibrary.git
