@@ -1,0 +1,129 @@
+{% comment %}
+http://teagardins.com/collections/water-pipes
+https://baghunter.com/collections/hermes
+http://www.kitoutmyoffice.com/collections/next-day-office-desks
+http://sugarandtots.com/collections/all
+{% endcomment %}
+
+!!!version 2!!!
+
+{% if paginate.pages > 1 %}
+
+  {% if paginate.next %}
+      <a href="{{ paginate.next.url }}" id="more" class="" >More</a>
+  {% endif %}
+
+    <script>
+
+          function ScrollExecute() {
+              scrollNode = jQuery('#more');
+              scrollURL = jQuery('#more').attr("href");
+              if (scrollNode.length > 0 && scrollNode.css('display') != 'none') {
+                  jQuery.ajax({
+                      type: 'GET',
+                      url: scrollURL,
+                      beforeSend: function () {
+                          $(scrollNode).html('<img src="{{ 'loading.gif' | asset_url }}" />').addClass('loading');
+                      },
+                      success: function (data) {
+                          scrollNode.next().remove();                            
+                          var $newItems = jQuery(data).find("#sandBox li.element");
+                            
+						  $('#sandBox').append( $newItems ).isotope( 'insert', $newItems ).imagesLoaded(function () {                            
+                          	$('#sandBox').isotope('reLayout'); 
+                          });                           
+                          var nextlURL = jQuery(data).find('#more').attr('href');
+                          jQuery('#more').hide();
+                          if (nextlURL.length > 0) {
+                              jQuery('#more').attr("href", nextlURL);
+                              jQuery('#more').html('More').removeClass('loading').css('display','block');                              
+                          }
+                      },
+                      dataType: "html"
+                  });
+              }
+          }
+          function scrollExs() {
+              if (jQuery(document).height() - jQuery(window).height() < (jQuery(document).scrollTop() + (jQuery(window).height()*2))) {
+                  ScrollExecute();
+              }
+          }
+          jQuery(document).ready(function () {
+              jQuery(window).scroll(function () {
+                  jQuery.doTimeout('scroll', 200, scrollExs);
+              });
+              jQuery('#more').click(function (e) {
+                e.preventDefault();
+                  if (!jQuery(this).hasClass('loading')) {
+                      ScrollExecute();                    
+                  }
+              });
+
+          });
+
+  (function($){var a={},c="doTimeout",d=Array.prototype.slice;$[c]=function(){return b.apply(window,[0].concat(d.call(arguments)))};$.fn[c]=function(){var f=d.call(arguments),e=b.apply(this,[c+f[0]].concat(f));return typeof f[0]==="number"||typeof f[1]==="number"?this:e};function b(l){var m=this,h,k={},g=l?$.fn:$,n=arguments,i=4,f=n[1],j=n[2],p=n[3];if(typeof f!=="string"){i--;f=l=0;j=n[1];p=n[2]}if(l){h=m.eq(0);h.data(l,k=h.data(l)||{})}else{if(f){k=a[f]||(a[f]={})}}k.id&&clearTimeout(k.id);delete k.id;function e(){if(l){h.removeData(l)}else{if(f){delete a[f]}}}function o(){k.id=setTimeout(function(){k.fn()},j)}if(p){k.fn=function(q){if(typeof p==="string"){p=g[p]}p.apply(m,d.call(n,i))===true&&!q?o():e()};o()}else{if(k.fn){j===undefined?e():k.fn(j===false);return true}else{e()}}}})(jQuery);
+
+
+    </script>
+{% endif %}
+
+!!!version 1!!!
+{% if paginate.pages > 1 %}
+
+  {% if paginate.next %}
+      <a href="{{ paginate.next.url }}" id="more" class="" >More</a>
+  {% endif %}
+
+    <script>
+
+          function ScrollExecute() {
+              scrollNode = jQuery('#more');
+              scrollURL = jQuery('#more').attr("href");
+              if (scrollNode.length > 0 && scrollNode.css('display') != 'none') {
+                  jQuery.ajax({
+                      type: 'GET',
+                      url: scrollURL,
+                      beforeSend: function () {
+                          $(scrollNode).html('<img src="{{ 'loading.gif' | asset_url }}" />').addClass('loading');
+                      },
+                      success: function (data) {
+                          scrollNode.next().remove();                            
+                          var $newItems = jQuery(data).find("#sandBox li.element");
+                            
+						  $('#sandBox').append( $newItems ).isotope( 'appended', $newItems ).imagesLoaded(function () {                            
+                          	$('#sandBox').isotope('reLayout'); 
+                          });                           
+                          var nextlURL = jQuery(data).find('#more').attr('href');
+                          jQuery('#more').hide();
+                          if (nextlURL.length > 0) {
+                              jQuery('#more').attr("href", nextlURL);
+                              jQuery('#more').html('More').removeClass('loading').css('display','block');                              
+                          }
+                      },
+                      dataType: "html"
+                  });
+              }
+          }
+          function scrollExs() {
+              if (jQuery(document).height() - jQuery(window).height() < (jQuery(document).scrollTop() + (jQuery(window).height()*2))) {
+                  ScrollExecute();
+              }
+          }
+          jQuery(document).ready(function () {
+              jQuery(window).scroll(function () {
+                  jQuery.doTimeout('scroll', 200, scrollExs);
+              });
+              jQuery('#more').click(function (e) {
+                e.preventDefault();
+                  if (!jQuery(this).hasClass('loading')) {
+                      ScrollExecute();                    
+                  }
+              });
+
+          });
+
+  (function($){var a={},c="doTimeout",d=Array.prototype.slice;$[c]=function(){return b.apply(window,[0].concat(d.call(arguments)))};$.fn[c]=function(){var f=d.call(arguments),e=b.apply(this,[c+f[0]].concat(f));return typeof f[0]==="number"||typeof f[1]==="number"?this:e};function b(l){var m=this,h,k={},g=l?$.fn:$,n=arguments,i=4,f=n[1],j=n[2],p=n[3];if(typeof f!=="string"){i--;f=l=0;j=n[1];p=n[2]}if(l){h=m.eq(0);h.data(l,k=h.data(l)||{})}else{if(f){k=a[f]||(a[f]={})}}k.id&&clearTimeout(k.id);delete k.id;function e(){if(l){h.removeData(l)}else{if(f){delete a[f]}}}function o(){k.id=setTimeout(function(){k.fn()},j)}if(p){k.fn=function(q){if(typeof p==="string"){p=g[p]}p.apply(m,d.call(n,i))===true&&!q?o():e()};o()}else{if(k.fn){j===undefined?e():k.fn(j===false);return true}else{e()}}}})(jQuery);
+
+
+    </script>
+{% endif %}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <style>
+            body{
+                margin: 50px;
+                position: relative;
+            }
+            .list-view {               
+                width: 100%;
+                height: 100%;
+                border: 1px solid black;
+                position: absolute;
+            }            
+            .resize-wrapper img {
+                display: block;
+            }
+            .resize-handle-s, .resize-handle-e, .line-handle-n, .line-handle-w{
+                background: black;
+                position: absolute;  
+            }
+
+            .resize-handle-se { 
+                position: absolute;
+                bottom: -7px;
+                right: -4px;
+                width: 14px;
+                height: 14px;                
+                cursor: se-resize;
+                border: 1px solid black;
+                background: url("sprite.png") no-repeat -149px -29px #f9f9f9;
+            }
+
+            .resize-handle-ro { 
+                position: absolute;
+                top: -7px;
+                right: -4px;
+                width: 14px; 
+                height: 14px;                
+                cursor: pointer;
+                border: 1px solid black;
+                background: url("sprite.png") no-repeat -71px -27px #f9f9f9;
+            }
+
+            .resize-handle-s {              
+                bottom: 0;
+                height: 1px;
+                width:100%;                
+                cursor: s-resize;
+            }
+
+            .resize-handle-e {          
+                right: 0;
+                top: 0;
+                width: 1px;
+                height:100%;                
+                cursor: e-resize;
+            }
+            .line-handle-n{                
+                left: 0;
+                top: 0;
+                width: 100%;
+                height:1px;                  
+            }
+            .line-handle-w{               
+                left: 0;
+                bottom: 0;
+                width: 1px;
+                height:100%;                     
+            }
+            .heroes{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: auto;
+            }
+            .padd{
+                opacity: 0.1; 
+            }
+            .resize-wrapper{
+                position: absolute;
+                z-index: 40;
+                cursor: move;
+                position: relative;
+                opacity: 0.15;
+            }            
+            .resize-wrapper:hover {
+                opacity: 1;
+                /*transition: all 0.15s ease;*/
+                -webkit-transition: opacity .15s ease-in-out;
+                -moz-transition: opacity .15s ease-in-out;
+                -ms-transition: opacity .15s ease-in-out;
+                -o-transition: opacity .15s ease-in-out;
+                transition: opacity .15s ease-in-out;
+            }
+            .bg{
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 20;
+                background: url("opa5.png") no-repeat center center transparent;
+                background-size: cover;
+            }
+            .o_h{
+                overflow: hidden;
+            }
+
+        </style>
+    </head>
+    <body >
+        
+        <p>Insert the full picture and data, and then click button "go"</p>
+        <input  id="file-input" name="files" type="file"> image<br>     
+        <input style="width:50%;" id="param" type="text" placeholder="Type param (1|2|3|4|5|6|7)" value="400|457|158.40|399|233|40|98">
+        <input type="button" value="go" id="go"/>
+
+        <div id="wrapper" style="width: 20px; height:20px; position: relative;">
+            <div id="ll-vv" class="list-view">                
+                
+                <div class="bg"></div>                    
+            </div>
+            <div class="list-view dd o_h">
+                <img class="heroes bb" src=""  />
+            </div>                
+        </div>     
+
+        <script>
+            var HTTP_HOME = '';
+            $(document).ready(function() {
+                var param = {};
+                param.wrepper = "#wrapper";
+                $('#go').click(function(e) {
+                    var par = $('#param').val().split("|");
+                    var wrapper = $('#wrapper');
+                    wrapper.css({
+                        width: par[0],
+                        height: par[1],
+                    });
+                    var image = $('.heroes');
+                    console.log(par);
+                    image.css({                        
+                        height: par[3],
+                        width: par[4],
+                        top: par[5]+'px',
+                        left: par[6]+'px',
+                        '-ms-transform': 'rotate(' + par[2] + 'deg)',
+                        '-webkit-transform': 'rotate(' + par[2] + 'deg)',
+                        transform: 'rotate(' + par[2] + 'deg)'
+                    });
+                });
+
+                var param = {};
+                document.body.ondragstart = function() {
+                    return false;
+                };
+                if (window.File && window.FileReader && window.FileList && window.Blob) {
+                    $('<div id="ll-vv" class="list-view"><div class="bg"></div></div>').appendTo("#wrapper");
+                    document.querySelector("#file-input").addEventListener("change", onFileSelect, false);
+                } else {
+                    alert("Your browser does not support File API")
+                }
+                function onFileSelect(e) {
+                    console.log(e.target.files[0]);
+                    var f = e.target.files[0], reader = new FileReader;
+                    reader.readAsDataURL(f);
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            var img = new Image();
+                            img.src = e.target.result;
+                            if (img.complete) {
+                                $('.heroes').attr('src', img.src);
+                            } else {
+                                img.onload = function() {
+                                    $('.heroes').attr('src', img.src);
+                                };
+                            }
+                        };
+                    })(f);
+                }
+            });
+        </script>
+    </body>
+</html>

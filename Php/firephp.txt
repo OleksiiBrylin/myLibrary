@@ -1,0 +1,9 @@
+$this -> load -> library('firephp');
+                    $this -> load -> library('fb');
+                    $this -> firephp -> setEnabled(true);
+                    $this->fb->info($total, "total");
+                   // $this->fb->info($settings, "set");
+                   // $this->fb->info($data['material_list'], "list");
+                   // $this->fb->info($data['page_nav'], "nav");
+                    $this->fb->log('Hello World');
+                    $this->fb->groupEnd();

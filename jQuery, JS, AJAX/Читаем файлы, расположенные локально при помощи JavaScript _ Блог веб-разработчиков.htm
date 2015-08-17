@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ru-RU"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Читаем файлы, расположенные локально при помощи JavaScript | Блог веб-разработчиков</title>
+    <meta name="google-site-verification" content="zJzGNKbrubOSKeHltdLv9SMGmw2y08F7IJ-4f1zXOVU">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/style.css" media="screen">
+    <link rel="stylesheet" href="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/demo.css" media="screen">
+    <link rel="shortcut Icon" href="http://true-coder.ru/favicon.png" type="image/x-icon">
+    <link rel="alternate" type="application/rss+xml" title="Блог веб-разработчиков RSS Feed" href="http://true-coder.ru/feed">
+    <link rel="pingback" href="http://true-coder.ru/xmlrpc.php">
+    <link rel="alternate" type="application/rss+xml" title="Блог веб-разработчиков » Лента комментариев к «Читаем файлы, расположенные локально при помощи JavaScript»" href="http://true-coder.ru/javascript/chitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.html/feed">
+<link rel="stylesheet" id="contact-form-7-css" href="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/styles.css" type="text/css" media="all">
+<link rel="stylesheet" id="wp-pagenavi-css" href="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/pagenavi-css.css" type="text/css" media="all">
+<script src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/chitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.htm" async=""></script><script gapi_processed="true" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/platform.js" async="" type="text/javascript"></script><script src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/widgets.js" id="twitter-wjs"></script><script async="" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/cbgapi.loaded_1"></script><script async="" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/cbgapi.loaded_0"></script><script gapi_processed="true" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/plusone.js" async="" type="text/javascript"></script><script src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/all.js" id="facebook-jssdk"></script><script type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/jquery.js"></script>
+<script type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/jquery-migrate.js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://true-coder.ru/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://true-coder.ru/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="JS для начинающих. Урок 1.6: Учимся использовать js-консоль" href="http://true-coder.ru/js-dlya-nachinayushhix/js-dlya-nachinayushhix-urok-1-6-uchimsya-ispolzovat-js-konsol.html">
+<link rel="next" title="PHP-класс для ресайза изображений" href="http://true-coder.ru/php/php-klass-dlya-resajza-izobrazhenij.html">
+<link rel="shortlink" href="http://true-coder.ru/?p=1175">
+
+<link rel="stylesheet" href="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/wp-syntax.css" type="text/css" media="screen">
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+
+<!-- All in One SEO Pack 2.1.5 by Michael Torbert of Semper Fi Web Design[78,174] -->
+<meta name="keywords" content="чтение файлов javascript, локальные файлы js, file api javascript, работа с файлами локально javascript">
+
+<link rel="canonical" href="http://true-coder.ru/javascript/chitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.html">
+<!-- /all in one seo pack -->
+    <script type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/main.js"></script>
+    <!-- <script type="text/javascript" src="http://userapi.com/js/api/openapi.js?48"></script> -->
+    <script type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/openapi.js"></script>
+    <script type="text/javascript">
+        VK.init({apiId: 2827853, onlyWidgets: true});
+    </script>
+<script src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/embed.js" async="" type="text/javascript"></script><script src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/count.js" type="text/javascript" async=""></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}.fb_link img{border:none}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_reset .fb_dialog_legacy{overflow:visible}.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.fb_dialog_content{background:#fff;color:#333}.fb_dialog_close_icon{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}.fb_dialog_close_icon:active{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/r/s816eWC-2sl.gif)}.fb_dialog_loader{background-color:#f6f7f8;border:1px solid #606060;font-size:24px;padding:20px}.fb_dialog_top_left,.fb_dialog_top_right,.fb_dialog_bottom_left,.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}.fb_dialog_top_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}.fb_dialog_top_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}.fb_dialog_bottom_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}.fb_dialog_bottom_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}.fb_dialog_vert_left,.fb_dialog_vert_right,.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}.fb_dialog_vert_left,.fb_dialog_vert_right{width:10px;height:100%}.fb_dialog_vert_left{margin-left:-10px}.fb_dialog_vert_right{right:0;margin-right:-10px}.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{width:100%;height:10px}.fb_dialog_horiz_top{margin-top:-10px}.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3a5795;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{max-height:590px;min-height:590px;max-width:500px;min-width:500px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6), color-stop(.5, #355492), to(#2A4887));border:1px solid #2f477a;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset, rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f6f7f8;border:1px solid #555;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_lift{z-index:1}.fb_hide_iframes iframe{position:relative;left:-10000px}.fb_iframe_widget_loader{position:relative;display:inline-block}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}.fb_iframe_widget_loader .FB_Loader{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}</style></head>
+
+<body data-twttr-rendered="true">
+
+<div class=" fb_reset" id="fb-root"><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/7r8gQb8MIqE.htm" style="border: medium none;" tabindex="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_http" scrolling="no" allowtransparency="true" name="fb_xdm_frame_http" frameborder="0"></iframe><iframe src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/7r8gQb8MIqE_002.htm" style="border: medium none;" tabindex="-1" title="Facebook Cross Domain Communication Frame" aria-hidden="true" id="fb_xdm_frame_https" scrolling="no" allowtransparency="true" name="fb_xdm_frame_https" frameborder="0"></iframe></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div></div></div></div>
+<script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1";
+            fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- <nav>
+    <div class="container">
+        <a href="http://true-coder.ru/category/html">HTML</a>
+        <a href="http://true-coder.ru/category/css3">CSS</a>
+        <a href="http://true-coder.ru/category/javascript">JavaScript</a>
+        <a href="http://true-coder.ru/category/js-dlya-nachinayushhix">JS для начинающих</a>
+        <a href="http://true-coder.ru/category/php">PHP</a>
+        <a href="http://true-coder.ru/category/oop-v-php">ООП в PHP</a>
+        <a href="http://true-coder.ru/category/design">Дизайн</a>
+        <a href="http://true-coder.ru/category/other">Общая рубрика</a>
+    </div>
+</nav>-->
+    
+<div id="wrapper">
+    <div class="header">
+
+        <a href="http://true-coder.ru/" class="logo" title="На главную"></a> 
+
+        <form method="get" id="searchform" action="http://true-coder.ru/">
+            <input class="search_inp" name="s" id="s" placeholder="Поиск по блогу" type="text">
+            <input id="searchsubmit" value="Найти" title="Найти" type="submit">
+        </form>
+
+        <div class="header-social">
+            <a href="http://feedburner.google.com/fb/a/mailverify?uri=true-coder/feed&amp;loc=ru_RU" rel="nofollow" target="_blank">
+                <img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/email.png" style="width: 30px; height: 30px" alt="">Получать новые статьи на email
+            </a> 
+            <a href="http://feeds.feedburner.com/true-coder/feed" rel="nofollow" target="_blank">
+                <img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/rss.png" alt="">Подписаться на RSS
+            </a>
+        </div>
+                
+        <div class="header-share">
+            <div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 106px; height: 24px;"><iframe title="+1" data-gapiattached="true" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/fastbutton.htm" name="I0_1420540310358" id="I0_1420540310358" vspace="0" tabindex="0" style="position: static; top: 0px; width: 106px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 24px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div>
+
+            <script type="text/javascript">
+                window.___gcfg = {lang: 'ru'};
+
+                (function() {
+                        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                        po.src = 'https://apis.google.com/js/plusone.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                })();
+            </script>
+        </div>
+
+    </div><!-- /.header -->
+
+	<div id="container">
+	    <div id="content"><a href="javascript:%20void(0);" class="toggle-sidebar" title="Скрыть сайдбар">—</a>
+
+	<div class="post full-post">
+	
+<div class="post-start" style="background-image: url(http://true-coder.ru/wp-content/uploads/2012/01/file-api-js.jpg);">
+	<div class="postmetadata">25 января 2012 / <b><a href="http://true-coder.ru/category/javascript" rel="category tag">JavaScript</a></b>
+	<!-- / <a href="http://true-coder.ru/javascript/chitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.html#comments" title="Прокомментировать запись &laquo;Читаем файлы, расположенные локально при помощи JavaScript&raquo;"><span class="dsq-postid" data-dsqidentifier="1175 http://true-coder.ru/?p=1175">К комментариям &darr;</span></a>-->
+	</div>
+	<div class="post-title">
+		<h1>Читаем файлы, расположенные локально при помощи JavaScript</h1>
+	</div>
+</div>
+
+<div class="article-share">
+	<div class="share-item">	
+		<div fb-iframe-plugin-query="action=like&amp;app_id=&amp;href=http%3A%2F%2Ftrue-coder.ru%2Fjavascript%2Fchitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.html&amp;layout=button_count&amp;locale=ru_RU&amp;sdk=joey&amp;share=true&amp;show_faces=true" fb-xfbml-state="rendered" class="fb-like fb_iframe_widget" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"><span style="vertical-align: bottom; width: 185px; height: 20px;"><iframe class="" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/like.htm" style="border: medium none; visibility: visible; width: 185px; height: 20px;" title="fb:like Facebook Social Plugin" scrolling="no" allowtransparency="true" name="f1f634c1cb1c4b" frameborder="0" height="1000px" width="1000px"></iframe></span></div>
+	</div>
+	<div class="share-item">
+		<div style="height: 20px; width: 180px; background: none repeat scroll 0% 0% transparent; position: relative; clear: both;" id="vk_like1"><iframe style="overflow: hidden; height: 20px; width: 180px; z-index: 150;" id="vkwidget1" scrolling="no" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/widget_like.htm" name="fXD83492" frameborder="0" height="20" width="100%"></iframe></div>
+		<script type="text/javascript">
+		VK.Widgets.Like("vk_like1", {type: "button", verb: 1, height: 20});
+		</script>
+	</div>
+    <div class="share-item share-item-twitter">
+        <iframe style="width: 138px; height: 20px;" data-twttr-rendered="true" title="Twitter Tweet Button" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-horizontal" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/tweet_button.htm" allowtransparency="true" scrolling="no" id="twitter-widget-0" frameborder="0"></iframe>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
+	<div class="share-item share-item-google">
+		<div id="___plusone_1" style="text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 90px; height: 20px;"><iframe title="+1" data-gapiattached="true" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/fastbutton_002.htm" name="I0_1420540312313" id="I0_1420540312313" vspace="0" tabindex="0" style="position: static; top: 0px; width: 90px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div>
+	</div>
+</div>
+
+<div class="entry">
+
+	<p><img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/file-api-js.jpg" alt="" title="file-api-js" class="aligncenter size-full wp-image-1182" height="374" width="321"><br>
+Возможности, появляющиеся в браузерах, всё более удивляют и восхищают 
+веб-разработчиков. То, что раннее реализовывалось при помощи flash'a или
+ апплетов, сейчас можно написать на чистом js. Одной из таких 
+удивительных возможностей стало возможность чтения файлов, расположенных
+ локально.</p>
+<h3>Зачем это нужно</h3>
+<p>Вариантов использования этой, безусловно, полезной возможности превеликое множество:</p>
+<ul>
+<li>Сжатие (архивация) файлов перед отправкой на сервер.</li>
+<li>Сжатие (с потерей качества), изменение размера или обрезка при помощи canvas изображения перед отправкой на сервер.</li>
+<li>Предоставление возможности пользователю самому определить шрифт текста, если файл шрифта расположен у него на компьютере.</li>
+<li>Можно перед загрузкой на сервер определить MIME тип файла и 
+отфильтровать файлы, который нельзя загружать на сервер. (Например, у 
+вас фотохостинг и вы не хотите, чтобы туда грузили что-то, кроме 
+изображений) Это можно сделать и на сервере, но это отнимет время у 
+пользователя и увеличит нагрузку на сервер.</li>
+<li>Можно написать приложение, работающее в браузере. Например, 
+графический редактор, или редактор js (html) – кода, в которых будет 
+предусмотрена возможность сохранения данных на стороне клиента.</li>
+</ul>
+<p><span id="more-1175"></span></p>
+<h3>Проверка поддержки</h3>
+<p>Для пользователей, не желающих идти в ногу со временем и использующих
+ устаревшие браузеры или IE, необходимо предусмотреть альтернативную 
+реализацию того функционала, который написан с использованием file API.</p>
+<p>Для проверки того, поддерживает ли браузер file API полностью 
+необходимо просто проверить наличие таких переменных как File, 
+FileReader, FileList и Blob в глобальной области видимости (в свойствах 
+объекта window)</p>
+<p><noindex></noindex></p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="line_numbers"><pre>1
+2
+3
+4
+</pre></td><td class="code"><pre class="javascript" style="font-family:monospace;"><span style="color: #003366; font-weight: bold;">var</span> fileAPISupport <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+<span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>window.<span style="color: #660066;">File</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">FileReader</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">FileList</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">Blob</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  fileAPISupport <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span></pre></td></tr></tbody></table></div>
+
+<p></p>
+<p>После выполнения вышеуказанного кода, в переменной fileAPISupport 
+будет записано булево значение, указывающее на то, поддерживается file 
+API в браузере, в котором был выполнен этот код, или нет.</p>
+<p><script type="text/javascript">
+if(!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+  document.write('<font color="red">Ваш браузер не поддерживает file API.</font>');
+} else {
+  document.write('<font color="green">Ваш браузер поддерживает file API.</font>');
+}
+</script><font color="green">Ваш браузер поддерживает file API.</font></p>
+<h3>Безопасность</h3>
+<p>Естественно, что читать файлы без ведома пользователя вам вряд ли 
+удастся. Для того, чтобы прочитать файл(ы), необходимо, чтобы 
+пользователь сам его (их) выбрал и нажал кнопку «Открыть»</p>
+<p>Существуют ещё некоторые ограничения, например, мне не удалось 
+прочитать файл при помощи скрипта, расположенного локально в браузере 
+хром. Проблема решается, если запустить скрипт, используя Denwer.</p>
+<h3>Выбор файлов для чтения</h3>
+<p>Чтобы предоставить пользователю возможность выбирать файлы для чтения с помощью js, необходимо использовать html-елемент </p>
+<p><noindex></noindex></p>
+
+<div class="wp_syntax"><div class="code"><pre class="html4strict" style="font-family:monospace;"><span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">input</span> <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span>”file” <span style="color: #66cc66;">/</span>&gt;</span></pre></div></div>
+
+<p></p>
+<p>Для выбора нескольких файлов к этому элементу необходимо добавить атрибут multiple со значением true.</p>
+<p>Для того, чтобы получить объект для работы с файлом в js необходимо 
+обратится к свойству files input'а при помощи которого пользователь 
+выбирал файлы. Это свойтcво содержит список файлов (FileList), который 
+выбрал пользователь. FileList очень похож на массив, у него есть длина и
+ к записанным в него файлам можно обращаться по индексу, как к элементам
+ массива. Объект для работы с файлом (File) содержит в себе размер файла
+ в байтах (свойство size), его MIME тип (type), имя (name) и дату 
+последней модификации (lastModifiedDate).</p>
+<p>Следующий пример показывает информацию о выбранных пользователем 
+файлах и генерирует превьюшки для изображений. Естественно, превью 
+делается без участия сервера.</p>
+<p>html-код:<br>
+<noindex></noindex></p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="line_numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="code"><pre class="html4strict" style="font-family:monospace;"><span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">html</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">head</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">title</span>&gt;</span>Выберите файлы<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">title</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">style</span>&gt;</span>
+table, td {
+  border: 1px solid lightgray;
+}
+&nbsp;
+table {
+  padding: 2px;
+  margin-top: 10px;
+}
+&nbsp;
+td {
+  padding: 5px;
+}
+<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">style</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">script</span> <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">"text/javascript"</span> <span style="color: #000066;">src</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">"selectingFiles.js"</span>&gt;&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">script</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">head</span>&gt;</span>
+&nbsp;
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">body</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">input</span> <span style="color: #000066;">type</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">"file"</span> <span style="color: #000066;">multiple</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">"true"</span> <span style="color: #66cc66;">/</span>&gt;&lt;<span style="color: #000000; font-weight: bold;">br</span> <span style="color: #66cc66;">/</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #000000; font-weight: bold;">div</span> <span style="color: #000066;">id</span><span style="color: #66cc66;">=</span><span style="color: #ff0000;">"output"</span>&gt;</span>
+Файлов не выбрано
+<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">div</span>&gt;</span>
+<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">body</span>&gt;</span>
+&nbsp;
+<span style="color: #009900;">&lt;<span style="color: #66cc66;">/</span><span style="color: #000000; font-weight: bold;">html</span>&gt;</span></pre></td></tr></tbody></table></div>
+
+<p></p>
+<p>и js:</p>
+<p><noindex></noindex></p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="line_numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+</pre></td><td class="code"><pre class="javascript" style="font-family:monospace;"><span style="color: #006600; font-style: italic;">/*
+ * Функция для добавления строки (&lt;tr&gt;),   
+ * содержащей информацию о файле
+ * в тело таблицы (tbody)
+ */</span>
+&nbsp;
+<span style="color: #003366; font-weight: bold;">function</span> appendFileInfo<span style="color: #009900;">(</span>tbody<span style="color: #339933;">,</span> data<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <span style="color: #003366; font-weight: bold;">var</span> tr <span style="color: #339933;">=</span> document.<span style="color: #660066;">createElement</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'tr'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #000066; font-weight: bold;">for</span><span style="color: #009900;">(</span><span style="color: #003366; font-weight: bold;">var</span> j <span style="color: #339933;">=</span> <span style="color: #CC0000;">0</span><span style="color: #339933;">;</span> j <span style="color: #339933;">&lt;</span> data.<span style="color: #660066;">length</span><span style="color: #339933;">;</span> j<span style="color: #339933;">++</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      td <span style="color: #339933;">=</span> document.<span style="color: #660066;">createElement</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'td'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      td.<span style="color: #660066;">innerHTML</span> <span style="color: #339933;">=</span> data<span style="color: #009900;">[</span>j<span style="color: #009900;">]</span> <span style="color: #339933;">||</span> <span style="color: #3366CC;">'неизвестно'</span><span style="color: #339933;">;</span>
+      tr.<span style="color: #660066;">appendChild</span><span style="color: #009900;">(</span>td<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+    tbody.<span style="color: #660066;">appendChild</span><span style="color: #009900;">(</span>tr<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #000066; font-weight: bold;">return</span> tbody<span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #006600; font-style: italic;">/*
+ * Функция для создания превью, т.е
+ * определение его размеров 
+ * по исходным размером изображения
+ */</span>
+&nbsp;
+<span style="color: #003366; font-weight: bold;">function</span> makePreview<span style="color: #009900;">(</span>image<span style="color: #339933;">,</span> a<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <span style="color: #003366; font-weight: bold;">var</span> img <span style="color: #339933;">=</span> image<span style="color: #339933;">,</span>
+    w <span style="color: #339933;">=</span> img.<span style="color: #660066;">width</span><span style="color: #339933;">,</span> h <span style="color: #339933;">=</span> img.<span style="color: #660066;">height</span><span style="color: #339933;">,</span>
+    s <span style="color: #339933;">=</span> w <span style="color: #339933;">/</span> h<span style="color: #339933;">;</span>     
+&nbsp;
+  <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>w <span style="color: #339933;">&gt;</span> a <span style="color: #339933;">&amp;&amp;</span> h <span style="color: #339933;">&gt;</span> a<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>img.<span style="color: #660066;">width</span> <span style="color: #339933;">&gt;</span> img.<span style="color: #660066;">height</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      img.<span style="color: #660066;">width</span> <span style="color: #339933;">=</span> a<span style="color: #339933;">;</span>
+      img.<span style="color: #660066;">height</span> <span style="color: #339933;">=</span> a <span style="color: #339933;">/</span> s<span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+      img.<span style="color: #660066;">height</span> <span style="color: #339933;">=</span> a<span style="color: #339933;">;</span>
+      img.<span style="color: #660066;">width</span> <span style="color: #339933;">=</span> a <span style="color: #339933;">*</span> s<span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #000066; font-weight: bold;">return</span> img<span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #006600; font-style: italic;">/*
+ * Эту функцию мы будем вызывать при изменении (onchange)
+ * input'а, т.е. когда пользователь выберет файлы.
+ */</span>
+&nbsp;
+<span style="color: #003366; font-weight: bold;">function</span> onFilesSelect<span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <span style="color: #006600; font-style: italic;">// получаем объект FileList</span>
+  <span style="color: #003366; font-weight: bold;">var</span> files <span style="color: #339933;">=</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">files</span><span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// div, куда помещается таблица с информацией о файлах</span>
+    output <span style="color: #339933;">=</span> document.<span style="color: #660066;">getElementById</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'output'</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// таблица с информацией</span>
+    table <span style="color: #339933;">=</span> document.<span style="color: #660066;">createElement</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'table'</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// её тело</span>
+    tbody <span style="color: #339933;">=</span> document.<span style="color: #660066;">createElement</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'tbody'</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// строка с информацией о файле (Перезаписывается каждый шаг цикла)</span>
+    row<span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// FileReader (Создаётся для каждого файла)</span>
+    fr<span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// объект file из FileList'a</span>
+    file<span style="color: #339933;">,</span>
+    <span style="color: #006600; font-style: italic;">// массив с информацией о файле</span>
+    data<span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #006600; font-style: italic;">// Чистим контейнер с таблицей</span>
+  output.<span style="color: #660066;">innerHTML</span> <span style="color: #339933;">=</span> <span style="color: #3366CC;">''</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #006600; font-style: italic;">// Вставляем в таблицу её тело</span>
+  table.<span style="color: #660066;">appendChild</span><span style="color: #009900;">(</span>tbody<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #006600; font-style: italic;">// Определяем заголовок таблицы (Названия колонок)</span>
+  tbody.<span style="color: #660066;">innerHTML</span> <span style="color: #339933;">=</span> 
+  <span style="color: #3366CC;">"&lt;tr&gt;&lt;td&gt;Имя&lt;/td&gt;&lt;td&gt;MIME тип&lt;/td&gt;&lt;td&gt;Размер (байт)&lt;/td&gt;&lt;td&gt;Превью&lt;/td&gt;&lt;/tr&gt;"</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #006600; font-style: italic;">// Перебираем все файлы в FileList'е</span>
+  <span style="color: #000066; font-weight: bold;">for</span><span style="color: #009900;">(</span><span style="color: #003366; font-weight: bold;">var</span> i <span style="color: #339933;">=</span> <span style="color: #CC0000;">0</span><span style="color: #339933;">;</span> i <span style="color: #339933;">&lt;</span> files.<span style="color: #660066;">length</span><span style="color: #339933;">;</span> i<span style="color: #339933;">++</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>    
+    file <span style="color: #339933;">=</span> files<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+    <span style="color: #006600; font-style: italic;">// Если в файле содержится изображение</span>
+    <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span><span style="color: #009966; font-style: italic;">/image.*/</span>.<span style="color: #660066;">test</span><span style="color: #009900;">(</span>file.<span style="color: #660066;">type</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #006600; font-style: italic;">// узнаём информацию о нём</span>
+      data <span style="color: #339933;">=</span> <span style="color: #009900;">[</span>file.<span style="color: #000066;">name</span><span style="color: #339933;">,</span> file.<span style="color: #660066;">type</span><span style="color: #339933;">,</span> file.<span style="color: #660066;">size</span><span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+      fr <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">new</span> FileReader<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #006600; font-style: italic;">// считываем его в строку base64</span>
+      fr.<span style="color: #660066;">readAsDataURL</span><span style="color: #009900;">(</span>file<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #006600; font-style: italic;">// как только файл загружен</span>
+      fr.<span style="color: #000066;">onload</span> <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>file<span style="color: #339933;">,</span> data<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+        <span style="color: #000066; font-weight: bold;">return</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>         
+          <span style="color: #003366; font-weight: bold;">var</span> img <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">new</span> Image<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>             
+            s<span style="color: #339933;">,</span> td<span style="color: #339933;">;</span>       
+          img.<span style="color: #660066;">src</span> <span style="color: #339933;">=</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">result</span><span style="color: #339933;">;</span>
+&nbsp;
+          <span style="color: #006600; font-style: italic;">/*
+           * и как только загружено изображение
+           * добавляем в информацию о файле html-код первьюшки
+           */</span>
+&nbsp;
+          <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>img.<span style="color: #660066;">complete</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+            img <span style="color: #339933;">=</span> makePreview<span style="color: #009900;">(</span>img<span style="color: #339933;">,</span> <span style="color: #CC0000;">128</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            data.<span style="color: #660066;">push</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'&lt;img src="'</span> <span style="color: #339933;">+</span> img.<span style="color: #660066;">src</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'" width='</span> <span style="color: #339933;">+</span> img.<span style="color: #660066;">width</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'" height="'</span> <span style="color: #339933;">+</span> img.<span style="color: #660066;">height</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'" /&gt;'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            appendFileInfo<span style="color: #009900;">(</span>tbody<span style="color: #339933;">,</span> data<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+          <span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+            img.<span style="color: #000066;">onload</span> <span style="color: #339933;">=</span>  <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+              img <span style="color: #339933;">=</span> makePreview<span style="color: #009900;">(</span>img<span style="color: #339933;">,</span> <span style="color: #CC0000;">128</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+              data.<span style="color: #660066;">push</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'&lt;img src="'</span> <span style="color: #339933;">+</span> img.<span style="color: #660066;">src</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'" width='</span> <span style="color: #339933;">+</span> img.<span style="color: #660066;">width</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'" height="'</span> <span style="color: #339933;">+</span> img.<span style="color: #660066;">height</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'" /&gt;'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+              appendFileInfo<span style="color: #009900;">(</span>tbody<span style="color: #339933;">,</span> data<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            <span style="color: #009900;">}</span>
+          <span style="color: #009900;">}</span>
+&nbsp;
+        <span style="color: #009900;">}</span>
+      <span style="color: #009900;">}</span><span style="color: #009900;">)</span> <span style="color: #009900;">(</span>file<span style="color: #339933;">,</span> data<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #006600; font-style: italic;">// Если файл не изображение</span>
+    <span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+      <span style="color: #006600; font-style: italic;">// то вместо превью выводим соответствующую надпись</span>
+      data <span style="color: #339933;">=</span> <span style="color: #009900;">[</span>file.<span style="color: #000066;">name</span><span style="color: #339933;">,</span> file.<span style="color: #660066;">type</span><span style="color: #339933;">,</span> file.<span style="color: #660066;">size</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'Файл не является изображением'</span><span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+      appendFileInfo<span style="color: #009900;">(</span>tbody<span style="color: #339933;">,</span> data<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>      
+  <span style="color: #009900;">}</span>
+  <span style="color: #006600; font-style: italic;">// помещаем таблицу с информацией о файле в div</span>
+  output.<span style="color: #660066;">appendChild</span><span style="color: #009900;">(</span>table<span style="color: #009900;">)</span><span style="color: #339933;">;</span>  
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #006600; font-style: italic;">// проверяем поддерживает ли браузер file API</span>
+<span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>window.<span style="color: #660066;">File</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">FileReader</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">FileList</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">Blob</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <span style="color: #006600; font-style: italic;">// если да, то как только страница загрузится</span>
+  <span style="color: #000066;">onload</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #006600; font-style: italic;">// вешаем обработчик события, срабатывающий при изменении input'а</span>
+    document.<span style="color: #660066;">querySelector</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'input'</span><span style="color: #009900;">)</span>.<span style="color: #660066;">addEventListener</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'change'</span><span style="color: #339933;">,</span> onFilesSelect<span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">false</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+<span style="color: #006600; font-style: italic;">// если нет, то предупреждаем, что демо работать не будет</span>
+<span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+  <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'К сожалению ваш браузер не поддерживает file API'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span></pre></td></tr></tbody></table></div>
+
+<p><br>
+<a href="http://true-coder.ru/demo/file-api-js/selectingFiles.html" target="_blank">Демо</a></p>
+<p>Обратите внимание на то, что для того, чтобы присвоить FileReader'у 
+обработчик onload, необходимо было создать замыкание для удержания 
+ссылок на текущие переменные data и file. Если его бы не было, то при 
+срабатывании обработчика в переменных file и data содержались данные о 
+последнем файле.</p>
+<p>Мы считывали файлы в base64. Это было сделано для того, чтобы можно 
+было отобразить превьюшку на картинку, если файл являлся изображение. Но
+ читать файлы можно и как двоичную строку (каждый символ в такой строке 
+имеет код от 0 до 255) при помощи функции readAsBinaryString объекта 
+FileReader,  и как текст при помощи readAsText (в кодировке UTF-8 по 
+умолчанию), и как ArrayBuffer (объект похожий на массив, который может 
+содержать только значения от 0 до 255) при помощи  readAsArrayBuffer.</p>
+<h3>Drag and drop</h3>
+<p>Для того, чтобы выбрать файл для последующего чтения можно просто 
+перетащить его из окна файлового менеджера в указанную область на 
+html-странице, открытой в браузере. К сожалению, эта возможность не 
+поддерживается оперой даже последней на момент выхода статьи версией 
+(11.61)</p>
+<p>Следующий пример демонстрирует эту возможность.</p>
+<p><noindex></noindex></p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="line_numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+</pre></td><td class="code"><pre class="javascript" style="font-family:monospace;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+#dropZone {
+  width: 600px;
+  height: 200px;
+  margin: 10px;
+  border: dotted black 2px;
+}
+&lt;/style&gt;
+&lt;title&gt;Drag And Drop&lt;/title&gt;
+<span style="color: #339933;">&lt;</span>script type<span style="color: #339933;">=</span><span style="color: #3366CC;">"text/javascript"</span><span style="color: #339933;">&gt;</span>
+  <span style="color: #006600; font-style: italic;">// Проверяем поддерживает ли браузер drag and drop</span>
+  <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'ondrop'</span> <span style="color: #000066; font-weight: bold;">in</span> document.<span style="color: #660066;">createElement</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'div'</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #000066;">onload</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #003366; font-weight: bold;">var</span> dropZone <span style="color: #339933;">=</span> document.<span style="color: #660066;">getElementById</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'dropZone'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      <span style="color: #006600; font-style: italic;">/*
+       * Обработчик, срабатывающий, когда курсор с
+       * перетаскиваем объектом оказывается над dropZone
+       */</span>
+&nbsp;
+      dropZone.<span style="color: #660066;">addEventListener</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'dragover'</span><span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+        <span style="color: #006600; font-style: italic;">// Останавливаем всплытие события</span>
+        e.<span style="color: #660066;">stopPropagation</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+        <span style="color: #006600; font-style: italic;">// останавливаем действие по умолчанию, связанное с эти событием.</span>
+        e.<span style="color: #660066;">preventDefault</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+        e.<span style="color: #660066;">dataTransfer</span>.<span style="color: #660066;">dropEffect</span> <span style="color: #339933;">=</span> <span style="color: #3366CC;">'copy'</span><span style="color: #339933;">;</span>    
+      <span style="color: #009900;">}</span><span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">false</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      <span style="color: #006600; font-style: italic;">/*
+       * Обработчик, срабатывающий, когда мы
+       * бросаем перетаскиваемые файлы в dropZone
+       */</span>
+&nbsp;
+      dropZone.<span style="color: #660066;">addEventListener</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'drop'</span><span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+&nbsp;
+        e.<span style="color: #660066;">stopPropagation</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+        e.<span style="color: #660066;">preventDefault</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+        <span style="color: #003366; font-weight: bold;">var</span> files <span style="color: #339933;">=</span> e.<span style="color: #660066;">dataTransfer</span>.<span style="color: #660066;">files</span><span style="color: #339933;">,</span> info <span style="color: #339933;">=</span> <span style="color: #3366CC;">''</span><span style="color: #339933;">,</span> file<span style="color: #339933;">;</span>
+&nbsp;
+        <span style="color: #000066; font-weight: bold;">for</span><span style="color: #009900;">(</span><span style="color: #003366; font-weight: bold;">var</span> i <span style="color: #339933;">=</span> <span style="color: #CC0000;">0</span><span style="color: #339933;">;</span> file <span style="color: #339933;">=</span> files<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span><span style="color: #339933;">;</span> i<span style="color: #339933;">++</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+          info <span style="color: #339933;">+=</span> <span style="color: #009900;">[</span>file.<span style="color: #000066;">name</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'('</span><span style="color: #339933;">,</span> file.<span style="color: #660066;">type</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">')'</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'-'</span><span style="color: #339933;">,</span> file.<span style="color: #660066;">size</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">'байт'</span><span style="color: #009900;">]</span>.<span style="color: #660066;">join</span><span style="color: #009900;">(</span><span style="color: #3366CC;">' '</span><span style="color: #009900;">)</span> <span style="color: #339933;">+</span> <span style="color: #3366CC;">'<span style="color: #000099; font-weight: bold;">\n</span>'</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">}</span>
+&nbsp;
+        <span style="color: #000066;">alert</span><span style="color: #009900;">(</span>info<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      <span style="color: #009900;">}</span><span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">false</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+  <span style="color: #006600; font-style: italic;">// очень печально если браузер не поддерживает drag and drop</span>
+  <span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+    <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">"К великой печали ваш браузер не поддерживает Drag&amp;Drop("</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+<span style="color: #339933;">&lt;/</span>script<span style="color: #339933;">&gt;</span>
+&lt;/head&gt;
+&nbsp;
+&lt;body&gt;
+&lt;div id="dropZone"&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&nbsp;
+&lt;/html&gt;</pre></td></tr></tbody></table></div>
+
+<p><br>
+<a href="http://true-coder.ru/demo/file-api-js/dragAndDrop.html" target="_blank">Демо</a></p>
+<h3>Читаем файлы по частям</h3>
+<p>Не обязательно считывать весь файл сразу, можно прочитать несколько 
+байт из любой части файла. Оперой эта возможность поддерживается только с
+ версии 11.61.</p>
+<p>Номер байта, с которого будет начинаться чтение файла, и номер байта,
+ каким чтение будет заканчиваться, определяется при помощи функций 
+объекта Blob webkitSlices(startByte, endByte) для хрома и 
+mozSlice(startByte, endByte) для лисы. Для того чтобы считать часть 
+файла возвращаемый этими функциями объект Blob передаётся, например, 
+функции readAsBinaryString объекта FileReader.</p>
+<p>Следующий пример демонстрирует возможность читать часть файла.</p>
+<p><noindex></noindex></p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="line_numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+</pre></td><td class="code"><pre class="javascript" style="font-family:monospace;">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Выберите файл&lt;/title&gt;
+<span style="color: #339933;">&lt;</span>script type<span style="color: #339933;">=</span><span style="color: #3366CC;">"text/javascript"</span><span style="color: #339933;">&gt;</span>
+  <span style="color: #006600; font-style: italic;">// Номер байта с которого будем начинать чтение</span>
+  <span style="color: #003366; font-weight: bold;">var</span> start <span style="color: #339933;">=</span> <span style="color: #CC0000;">0</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #006600; font-style: italic;">// Функция для чтения части файла</span>
+  <span style="color: #003366; font-weight: bold;">function</span> read<span style="color: #009900;">(</span>startByte<span style="color: #339933;">,</span> stopByte<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #003366; font-weight: bold;">var</span> fr <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">new</span> FileReader<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+      file <span style="color: #339933;">=</span> document.<span style="color: #660066;">querySelector</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'input'</span><span style="color: #009900;">)</span>.<span style="color: #660066;">files</span><span style="color: #009900;">[</span><span style="color: #CC0000;">0</span><span style="color: #009900;">]</span><span style="color: #339933;">,</span>
+      blob<span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!</span>file<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'Выберите, пожалуйста, файл!'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #000066; font-weight: bold;">return</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+&nbsp;
+    fr.<span style="color: #660066;">onloadend</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+&nbsp;
+      <span style="color: #006600; font-style: italic;">/*
+       * Необходимо проверять статус готовности перед тем, 
+       * как получать считанный результат 
+       */</span>
+&nbsp;
+      <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>e.<span style="color: #660066;">target</span>.<span style="color: #660066;">readyState</span> <span style="color: #339933;">==</span> FileReader.<span style="color: #660066;">DONE</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+        output.<span style="color: #660066;">textContent</span> <span style="color: #339933;">+=</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">result</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+    <span style="color: #009900;">}</span>
+&nbsp;
+    <span style="color: #006600; font-style: italic;">// Для хрома</span>
+    <span style="color: #000066; font-weight: bold;">if</span> <span style="color: #009900;">(</span>file.<span style="color: #660066;">webkitSlice</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      blob <span style="color: #339933;">=</span> file.<span style="color: #660066;">webkitSlice</span><span style="color: #009900;">(</span>startByte<span style="color: #339933;">,</span> stopByte <span style="color: #339933;">+</span> <span style="color: #CC0000;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #006600; font-style: italic;">// Для лисы</span>
+    <span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #000066; font-weight: bold;">if</span> <span style="color: #009900;">(</span>file.<span style="color: #660066;">mozSlice</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      blob <span style="color: #339933;">=</span> file.<span style="color: #660066;">mozSlice</span><span style="color: #009900;">(</span>startByte<span style="color: #339933;">,</span> stopByte <span style="color: #339933;">+</span> <span style="color: #CC0000;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+&nbsp;
+    <span style="color: #006600; font-style: italic;">// Считываем как бинарную строку</span>
+    fr.<span style="color: #660066;">readAsBinaryString</span><span style="color: #009900;">(</span>blob<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #006600; font-style: italic;">// Меняем начальную позицию, учитываем что байты нумеруются с нуля</span>
+    start <span style="color: #339933;">=</span> stopByte <span style="color: #339933;">+</span> <span style="color: #CC0000;">1</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #006600; font-style: italic;">// Проверяем поддерживается ли возможность читать файл по кускам</span>
+  <span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!!</span>window.<span style="color: #660066;">Blob</span> <span style="color: #339933;">&amp;&amp;</span> <span style="color: #009900;">(</span><span style="color: #339933;">!!</span>Blob.<span style="color: #660066;">prototype</span>.<span style="color: #660066;">webkitSlice</span> <span style="color: #339933;">||</span> <span style="color: #339933;">!!</span>Blob.<span style="color: #660066;">prototype</span>.<span style="color: #660066;">mozSlice</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #000066;">onload</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      output <span style="color: #339933;">=</span> document.<span style="color: #660066;">getElementById</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'output'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+  <span style="color: #006600; font-style: italic;">// и предупреждаем пользователя если не поддерживается</span>
+  <span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+    <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'Ваш браузер не поддерживает чтение файлов по частям!'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+<span style="color: #339933;">&lt;/</span>script<span style="color: #339933;">&gt;</span>
+&lt;/head&gt;
+&nbsp;
+&lt;body&gt;
+&lt;input type="file" /&gt;&lt;br /&gt;
+&lt;button id="fiveByte" onclick="read(start, start + 4)"&gt;Считать 5 байт&lt;/button&gt;
+&lt;button id="tenByte" onclick="read(start, start + 9)"&gt;Считать 10 байт&lt;/button&gt;
+&lt;button id="twentyByte" onclick="read(start, start + 19)"&gt;Считать 20 байт&lt;/button&gt;
+&lt;div id="output"&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&nbsp;
+&lt;/html&gt;</pre></td></tr></tbody></table></div>
+
+<p><br>
+<a href="http://true-coder.ru/demo/file-api-js/readingChunkFile.html" target="_blank">Демо</a></p>
+<h3>Мониторим прогресс чтения</h3>
+<p>File API предоставляет возможность отследить прогресс чтения 
+локального файла. У FileReader'а есть обработчики событий onloadstart и 
+onprogress, срабатывающие при начале загрузки и прогрессе чтения файла. 
+Кроме того, при помощи обработчика onerror можно обрабатывать ошибки, 
+возникшие в ходе чтения файла.</p>
+<p>Покажем всё это на следующем примере.</p>
+<p><noindex></noindex></p>
+
+<div class="wp_syntax"><table><tbody><tr><td class="line_numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+</pre></td><td class="code"><pre class="javascript" style="font-family:monospace;">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Выберите файл&lt;/title&gt;
+<span style="color: #339933;">&lt;</span>script type<span style="color: #339933;">=</span><span style="color: #3366CC;">"text/javascript"</span><span style="color: #339933;">&gt;</span>
+<span style="color: #000066; font-weight: bold;">if</span><span style="color: #009900;">(</span>window.<span style="color: #660066;">File</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">FileReader</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">FileList</span> <span style="color: #339933;">&amp;&amp;</span> window.<span style="color: #660066;">Blob</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <span style="color: #000066;">onload</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #003366; font-weight: bold;">var</span> inp <span style="color: #339933;">=</span> document.<span style="color: #660066;">querySelector</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'input'</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>
+      progressBar <span style="color: #339933;">=</span> document.<span style="color: #660066;">querySelector</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'progress'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    inp.<span style="color: #660066;">addEventListener</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'change'</span><span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #003366; font-weight: bold;">var</span> file <span style="color: #339933;">=</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">files</span><span style="color: #009900;">[</span><span style="color: #CC0000;">0</span><span style="color: #009900;">]</span><span style="color: #339933;">,</span>
+        fr <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">new</span> FileReader<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+        fr.<span style="color: #660066;">onprogress</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>          
+          <span style="color: #003366; font-weight: bold;">var</span> loaded <span style="color: #339933;">=</span> Math.<span style="color: #660066;">round</span><span style="color: #009900;">(</span><span style="color: #009900;">(</span>e.<span style="color: #660066;">loaded</span> <span style="color: #339933;">/</span> e.<span style="color: #660066;">total</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> <span style="color: #CC0000;">100</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+          progressBar.<span style="color: #660066;">value</span> <span style="color: #339933;">=</span> loaded<span style="color: #339933;">;</span>          
+        <span style="color: #009900;">}</span>
+&nbsp;
+        fr.<span style="color: #000066;">onload</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+          <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">"файл считан!"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">}</span>
+&nbsp;
+        fr.<span style="color: #000066;">onerror</span> <span style="color: #339933;">=</span> <span style="color: #003366; font-weight: bold;">function</span> <span style="color: #009900;">(</span>e<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+          <span style="color: #000066; font-weight: bold;">switch</span><span style="color: #009900;">(</span>e.<span style="color: #660066;">target</span>.<span style="color: #660066;">error</span>.<span style="color: #660066;">code</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+            <span style="color: #000066; font-weight: bold;">case</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">error</span>.<span style="color: #660066;">NOT_FOUND_ERR</span><span style="color: #339933;">:</span>
+              <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'Файл не найден!'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+              <span style="color: #000066; font-weight: bold;">break</span><span style="color: #339933;">;</span>
+            <span style="color: #000066; font-weight: bold;">case</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">error</span>.<span style="color: #660066;">NOT_READABLE_ERR</span><span style="color: #339933;">:</span>
+              <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'Невозможно прочитать файл!'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+              <span style="color: #000066; font-weight: bold;">break</span><span style="color: #339933;">;</span>
+            <span style="color: #000066; font-weight: bold;">case</span> e.<span style="color: #660066;">target</span>.<span style="color: #660066;">error</span>.<span style="color: #660066;">ABORT_ERR</span><span style="color: #339933;">:</span>
+              <span style="color: #000066; font-weight: bold;">break</span><span style="color: #339933;">;</span>
+            <span style="color: #003366; font-weight: bold;">default</span><span style="color: #339933;">:</span>
+              <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">'Ошибка при чтении файла!'</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+          <span style="color: #009900;">}</span>
+        <span style="color: #009900;">}</span>
+&nbsp;
+        fr.<span style="color: #660066;">readAsBinaryString</span><span style="color: #009900;">(</span>file<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span><span style="color: #339933;">,</span> <span style="color: #003366; font-weight: bold;">false</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+<span style="color: #009900;">}</span> <span style="color: #000066; font-weight: bold;">else</span> <span style="color: #009900;">{</span>
+  <span style="color: #000066;">alert</span><span style="color: #009900;">(</span><span style="color: #3366CC;">"Ваш браузер не поддерживает file API"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+<span style="color: #339933;">&lt;/</span>script<span style="color: #339933;">&gt;</span>
+&lt;/head&gt;
+&nbsp;
+&lt;body&gt;
+&lt;input type="file" /&gt;&lt;br /&gt;
+&lt;progress style="width: 300px; margin: 10px; " value="0" min="0" max="100"&gt;&lt;/progress&gt;
+&lt;/body&gt;
+&nbsp;
+&lt;/html&gt;</pre></td></tr></tbody></table></div>
+
+<p></p>
+<p align="center">
+<a href="http://true-coder.ru/demo/file-api-js/monitoringProgress.html" target="_blank" class="submit">Демо</a>
+</p>
+<p>Сегодня вы познакомились ещё с одной удивительной возможностью, 
+которую предоставляют нам новые технологии и, хотя, всё это пока не 
+находит широкого применения, знать об этом не помешает. Прогресс не 
+стоит на месте и в скором времени у всех пользователей будут нормальные 
+браузеры поддерживающие не только file API, но и ещё много других 
+удивительных возможностей.</p>
+<p align="center">
+<a href="http://true-coder.ru/files/file-api-js.zip" class="submit">Скачать исходники</a></p>
+
+<div class="article-share">
+	<div class="share-item">	
+		<div fb-iframe-plugin-query="action=like&amp;app_id=&amp;href=http%3A%2F%2Ftrue-coder.ru%2Fjavascript%2Fchitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.html&amp;layout=button_count&amp;locale=ru_RU&amp;sdk=joey&amp;share=true&amp;show_faces=true" fb-xfbml-state="rendered" class="fb-like fb_iframe_widget" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"><span style="vertical-align: bottom; width: 185px; height: 20px;"><iframe class="" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/like_002.htm" style="border: medium none; visibility: visible; width: 185px; height: 20px;" title="fb:like Facebook Social Plugin" scrolling="no" allowtransparency="true" name="f39f2b3f01ca4ee" frameborder="0" height="1000px" width="1000px"></iframe></span></div>
+	</div>
+	<div class="share-item">
+		<div style="height: 20px; width: 180px; background: none repeat scroll 0% 0% transparent; position: relative; clear: both;" id="vk_like2"><iframe style="overflow: hidden; height: 20px; width: 180px; z-index: 150;" id="vkwidget2" scrolling="no" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/widget_like_002.htm" name="fXD666f2" frameborder="0" height="20" width="100%"></iframe></div>
+		<script type="text/javascript">
+		VK.Widgets.Like("vk_like2", {type: "button", verb: 1, height: 20});
+		</script>
+	</div>
+    <div class="share-item share-item-twitter">
+        <iframe style="width: 138px; height: 20px;" data-twttr-rendered="true" title="Twitter Tweet Button" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-horizontal" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/tweet_button_002.htm" allowtransparency="true" scrolling="no" id="twitter-widget-1" frameborder="0"></iframe>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
+	<div class="share-item share-item-google">
+		<div id="___plusone_2" style="text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 90px; height: 20px;"><iframe title="+1" data-gapiattached="true" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/fastbutton_003.htm" name="I1_1420540312322" id="I1_1420540312322" vspace="0" tabindex="0" style="position: static; top: 0px; width: 90px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div>
+	</div>
+</div>
+
+
+</div>
+
+
+<div class="notice-error">
+	Заметили ошибку? Выделите её и нажмите Ctrl+Enter
+    <img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/facepalm.png" class="facepalm" alt="">
+</div>
+
+<div id="article-author">
+	<div class="article-author">
+		<div class="author-image">
+			<img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/4.jpg" alt="Фото">
+			<span><a href="http://true-coder.ru/author/gooz">48 статей</a></span>
+		</div>
+		<div class="author-text">
+			<div class="author-name"><span>Автор: </span><a href="http://true-coder.ru/" title="Перейти на сайт Антон Кургузенков" rel="author external">Антон Кургузенков</a></div>
+					</div>
+
+	</div>
+
+	<div class="author-articles">
+		<div class="block-title">Другие статьи автора</div>
+		<ul>
+						<li>
+				<a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html" title="Интересная задачка по программированию">Интересная задачка по программированию</a>
+			</li>
+						<li>
+				<a href="http://true-coder.ru/javascript/perexvat-vyzova-funkcii-v-javascript.html" title="Перехват вызова функции в JavaScript">Перехват вызова функции в JavaScript</a>
+			</li>
+						<li>
+				<a href="http://true-coder.ru/js-dlya-nachinayushhix/js-dlya-nachinayushhix-urok-1-18-ispolzovanie-regulyarnyx-vyrazhenij.html" title="JS для начинающих. Урок 1.18: Использование регулярных выражений">JS для начинающих. Урок 1.18: Использование регулярных выражений</a>
+			</li>
+						<li>
+				<a href="http://true-coder.ru/js-dlya-nachinayushhix/sintaksis-regulyarnyx-vyrazhenij.html" title="JS для начинающих. Урок 1.17: Синтаксис регулярных выражений">JS для начинающих. Урок 1.17: Синтаксис регулярных выражений</a>
+			</li>
+						<li>
+				<a href="http://true-coder.ru/javascript/shablonizaciya-na-storone-klienta.html" title="Шаблонизация на стороне клиента">Шаблонизация на стороне клиента</a>
+			</li>
+					</ul>
+	</div>
+
+</div>
+
+</div>
+
+
+<div id="disqus_thread"><iframe verticalscrolling="no" horizontalscrolling="no" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/a.htm" style="width: 100% ! important; border: medium none ! important; overflow: hidden ! important; height: 757px ! important;" title="Disqus" tabindex="0" scrolling="no" allowtransparency="true" data-disqus-uid="2" id="dsq-2" frameborder="0" width="100%"></iframe></div>
+
+<script type="text/javascript">
+var disqus_url = 'http://true-coder.ru/javascript/chitaem-fajly-raspolozhennye-lokalno-pri-pomoshhi-javascript.html';
+var disqus_identifier = '1175 http://true-coder.ru/?p=1175';
+var disqus_container_id = 'disqus_thread';
+var disqus_shortname = 'truecoder';
+var disqus_title = "Читаем файлы, расположенные локально при помощи JavaScript";
+var disqus_config_custom = window.disqus_config;
+var disqus_config = function () {
+    /*
+    All currently supported events:
+    onReady: fires when everything is ready,
+    onNewComment: fires when a new comment is posted,
+    onIdentify: fires when user is authenticated
+    */
+    
+    this.page.remote_auth_s3 = 'W10= 926b7cd1d213296740a2a21ca569a2333d267d06 1420540307';
+this.page.api_key = 'E54c55rAQHBxZ43ZuYSXhyLKW5OLHQ3Xk8W2JoqCCcuo8xYcsXQmT7GvSZ3DhJKJ';
+this.sso = {     
+          name: "Блог веб-разработчиков",       
+          button: "",       
+          url: "http://true-coder.ru/wp-login.php",        
+          logout: "http://true-coder.ru/wp-login.php?action=logout",       
+          width: "800",        
+          height: "700"        
+    };
+    this.language = '';
+        this.callbacks.onReady.push(function () {
+
+        // sync comments in the background so we don't block the page
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = '?cf_action=sync_comments&post_id=1175';
+
+        var firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+    });
+    
+    if (disqus_config_custom) {
+        disqus_config_custom.call(this);
+    }
+};
+
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+
+    </div><!-- end #content -->
+	<div id="sidebars">
+	<div id="r-sidebar">
+			<!--<div class="side-subscribe">
+		<div class="title">Подписка на обновления</div>
+		<form action="http://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('http://feedburner.google.com/fb/a/mailverify?uri=true-coder/feed', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+			<input type="text" name="email" class="inp-email" placeholder="Ваш email" />
+			<input type="hidden" value="true-coder/feed" name="uri"/>
+			<input type="hidden" name="loc" value="ru_RU"/>
+			<input type="submit" class="btn" value="Подписаться" />
+</form>
+	</div>-->
+
+<div id="text-14" class="widget widget_text">			<div class="textwidget"><a href="http://true-coder.ru/javascript-dlya-nachinayushhix"><img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/javascript-for-beginners.gif" alt="JavaScript для начинающих" title="Курс лекций: JavaScript для начинающих" style="width: 295px; height: 100px;"></a><br><br></div>
+		</div><div id="text-15" class="widget widget_text">			<div class="textwidget"><div id="categories-3" class="widget widget_categories"><h2>Рубрики</h2>
+	<ul class="categories">
+		<li><a href="http://true-coder.ru/category/html" title="Просмотреть все записи в рубрике «HTML»">HTML</a></li>
+		<li><a href="http://true-coder.ru/category/css3" title="Просмотреть все записи в рубрике «CSS»">CSS</a></li>
+		<li><a href="http://true-coder.ru/category/javascript" title="Просмотреть все записи в рубрике «JavaScript»">JavaScript</a></li>
+		<li><a href="http://true-coder.ru/category/js-dlya-nachinayushhix" title="Просмотреть все записи в рубрике «JS для начинающих»">JS для начинающих</a></li>
+		<li><a href="http://true-coder.ru/category/php" title="Просмотреть все записи в рубрике «PHP»">PHP</a></li>
+		<li><a href="http://true-coder.ru/category/oop-v-php" title="Просмотреть все записи в рубрике «ООП в PHP»">ООП в PHP</a></li>
+		<li><a href="http://true-coder.ru/category/design" title="Просмотреть все записи в рубрике «Дизайн»">Дизайн</a></li>
+		<li><a href="http://true-coder.ru/category/other" title="Просмотреть все записи в рубрике «Общая рубрика»">Общая рубрика</a></li>
+	</ul>
+	<ul class="categories" id="categories-hidden">
+		<li><a href="http://true-coder.ru/category/wordpress" title="Просмотреть все записи в рубрике «WordPress»">WordPress</a></li>
+		<li><a href="http://true-coder.ru/category/wordpress/wordpress-themes" title="Просмотреть все записи в рубрике «Темы WordPress»">Темы WordPress</a></li>
+		<li><a href="http://true-coder.ru/category/wordpress/plaginy" title="Просмотреть все записи в рубрике «Плагины WordPress»">Плагины WordPress</a></li>
+		<li><a href="http://true-coder.ru/category/photoshop-tutorials" title="Просмотреть все записи в рубрике «Уроки Photoshop»">Уроки Photoshop</a></li>
+		<li><a href="http://true-coder.ru/category/seo" title="Просмотреть все записи в рубрике «SEO »">SEO</a></li>
+		<li><a href="http://true-coder.ru/category/services" title="Просмотреть все записи в рубрике «Сервисы»">Сервисы</a></li>
+		<li><a href="http://true-coder.ru/category/browsers" title="Просмотреть все записи в рубрике «Браузеры»">Браузеры</a></li>
+		<li><a href="http://true-coder.ru/category/soft" title="Просмотреть все записи в рубрике «Софт»">Софт</a></li>
+		<li><a href="http://true-coder.ru/category/flash" title="Просмотреть все записи в рубрике «Flash»">Flash</a></li>
+		<li><a href="http://true-coder.ru/category/freebie" title="Просмотреть все записи в рубрике «Халява»">Халява</a></li>
+	</ul>
+	<a href="javascript:void(0)" id="show-more-cat">
+		<span class="text-more">Еще</span>
+		<span class="text-hide">Скрыть</span>
+	</a>
+</div></div>
+		</div><div id="text-12" class="widget widget_text">			<div class="textwidget"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-3911287866904359";
+/* Сайдбар */
+google_ad_slot = "7193168777";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/show_ads.js">
+</script></div>
+		</div>		<div id="recent-posts-5" class="widget widget_recent_entries">		<h2>Новые статьи</h2>		<ul>
+					<li>
+				<a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html">Интересная задачка по программированию</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/css3/ispolzovanie-css3-mask-dlya-sozdaniya-universalnyx-ikonok.html">Использование CSS3 mask для создания универсальных иконок</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/javascript/perexvat-vyzova-funkcii-v-javascript.html">Перехват вызова функции в JavaScript</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/js-dlya-nachinayushhix/js-dlya-nachinayushhix-urok-1-18-ispolzovanie-regulyarnyx-vyrazhenij.html">JS для начинающих. Урок 1.18: Использование регулярных выражений</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/js-dlya-nachinayushhix/sintaksis-regulyarnyx-vyrazhenij.html">JS для начинающих. Урок 1.17: Синтаксис регулярных выражений</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/css3/adaptivnyj-tekst-v-neskolko-kolonok-na-css.html">Адаптивный текст в несколько колонок на CSS</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/javascript/shablonizaciya-na-storone-klienta.html">Шаблонизация на стороне клиента</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/seo/celevaya-stranica-sozdanie-i-optimizaciya.html">Целевая страница: создание и оптимизация</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/js-dlya-nachinayushhix/js-dlya-nachinayushhix-urok-1-16-privedenie-tipov.html">JS для начинающих. Урок 1.16: Приведение типов</a>
+						</li>
+					<li>
+				<a href="http://true-coder.ru/php/iterirovanie-obektov-v-php-vstroennye-klassy-iteratory-obekt-kak-massiv.html">Итерирование объектов в php. Встроенные классы-итераторы. Объект как массив</a>
+						</li>
+				</ul>
+		</div><div id="recent-comments-5" class="widget widget_recent_comments"><h2>Последние комментарии</h2><ul id="recentcomments"><li class="recentcomments"><span class="comment-author-link">Vitaly Usatov</span> к записи <a href="http://true-coder.ru/php/toolkit-dlya-resajza-i-kropa-izobrazhenij-na-php.html#comment-69713">Toolkit для ресайза и кропа изображений на PHP</a></li><li class="recentcomments"><span class="comment-author-link">mops1k</span> к записи <a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html#comment-69712">Интересная задачка по программированию</a></li><li class="recentcomments"><span class="comment-author-link">Alina Nikolaenko</span> к записи <a href="http://true-coder.ru/php/pishem-registraciyu-na-php-i-javascript-chast-1-php.html#comment-69711">Пишем регистрацию на PHP и JavaScript — Часть 1: PHP</a></li><li class="recentcomments"><span class="comment-author-link">Олег Оскольский</span> к записи <a href="http://true-coder.ru/javascript/shablonizaciya-na-storone-klienta.html#comment-69710">Шаблонизация на стороне клиента</a></li><li class="recentcomments"><span class="comment-author-link"><a href="http://shuvalov.info/" rel="external nofollow" class="url">Антон Шувалов</a></span> к записи <a href="http://true-coder.ru/javascript/karrirovanie-karring-v-javascript.html#comment-69709">Каррирование (карринг) в JavaScript</a></li><li class="recentcomments"><span class="comment-author-link">Митя</span> к записи <a href="http://true-coder.ru/php/gostevaya-kniga-na-php.html#comment-69708">Гостевая книга на PHP</a></li><li class="recentcomments"><span class="comment-author-link"><a href="http://true-coder.ru/" rel="external nofollow" class="url">Антон Кургузенков</a></span> к записи <a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html#comment-69707">Интересная задачка по программированию</a></li><li class="recentcomments"><span class="comment-author-link">Михась Коберник</span> к записи <a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html#comment-69706">Интересная задачка по программированию</a></li><li class="recentcomments"><span class="comment-author-link">Михась Коберник</span> к записи <a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html#comment-69705">Интересная задачка по программированию</a></li><li class="recentcomments"><span class="comment-author-link"><a href="http://true-coder.ru/" rel="external nofollow" class="url">Антон Кургузенков</a></span> к записи <a href="http://true-coder.ru/javascript/interesnaya-zadachka-po-programmirovaniyu.html#comment-69704">Интересная задачка по программированию</a></li></ul></div><div id="text-13" class="widget widget_text">			<div class="textwidget"><!-- VK Widget -->
+<div style="height: 295px; width: 295px; background: none repeat scroll 0% 0% transparent;" id="vk_groups"><iframe style="overflow: hidden; height: 295px;" id="vkwidget3" scrolling="no" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/widget_community.htm" name="fXDa3cf1" frameborder="0" height="200" width="295"></iframe></div>
+<script type="text/javascript">
+VK.Widgets.Group("vk_groups", {mode: 0, width: "295", height: "295"}, 17586377);
+</script>
+<br></div>
+		</div><div id="text-7" class="widget widget_text"><h2>Присоединяйтесь на Subscribe</h2>			<div class="textwidget"><center><noindex><a rel="nofollow" href="http://subscribe.ru/group/veb-razrabotka-i-programmirovanie/" target="_blank"><img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/subscr.jpg"></a></noindex>
+<!-- <br /><br />
+<noindex><a rel="nofollow" href="http://subscribe.ru/group/sozdat-svoj-sajt-mechta-kazhdogo-chelovekakotoryij-hotya-byi-2-3-raza-zahodil-v-internet/" target="_blank"><img src="http://image.subscribe.ru/group/uploads/so/sozdat-svoj-sajt-mechta-kazhdogo-chelovekakotoryij-hotya-byi-2-3-raza-zahodil-v-internet/image/lmLTlkYTI_jpg_150x150_q85.jpg" width="150" height="58" alt="1"></a></noindex>--></center></div>
+		</div>
+			</div><!-- end #r-sidebar -->
+		</div><!-- end #sidebars -->	</div><!-- end #container -->
+
+	<div id="footer">
+
+<div style="float: left; padding-right: 10px;">
+
+<!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a rel='nofollow' href='http://www.liveinternet.ru/click' "+
+"target=_blank><img src='//counter.yadro.ru/hit?t17.2;r"+
+escape(document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";"+Math.random()+
+"' alt='' title='LiveInternet: показано число просмотров за 24"+
+" часа, посетителей за 24 часа и за сегодня' "+
+"border='0' width='88' height='31'><\/a>")
+//--></script><a rel="nofollow" href="http://www.liveinternet.ru/click" target="_blank"><img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/hit.gif" alt="" title="LiveInternet: показано число просмотров за 24 часа, посетителей за 24 часа и за сегодня" border="0" height="31" width="88"></a><!--/LiveInternet-->
+
+<!--<noindex><a rel="nofollow" href="http://www.pr-cy.ru/" target="_blank" title="Счетчик тИЦ и PR"><img src="http://counter.pr-cy.ru/prcy/true-coder.ru" alt="PR-CY.ru" width="88" height="31" border="0" /></a></noindex>-->
+
+<noindex><a rel="nofollow" href="http://feeds.feedburner.com/true-coder/feed"><img src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/feed.gif" style="border:0" alt="" height="26" width="88"></a></noindex>
+
+<script type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/orphus.js"></script>
+<noindex><a title="Система Orphus" rel="nofollow" href="http://orphus.ru/" id="orphus" target="_blank"><img alt="Система Orphus" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/orphus.gif" border="0" height="31" width="88"></a></noindex>
+</div>
+
+© 2013 <a href="http://true-coder.ru/">Блог веб-разработчиков</a> / <a href="http://true-coder.ru/contacts">Связаться с нами</a><br>
+Копирование материалов сайта запрещено.
+	
+
+</div><!-- end #wrapper -->
+
+        <script type="text/javascript">
+        // <![CDATA[
+        var disqus_shortname = 'truecoder';
+        (function () {
+            var nodes = document.getElementsByTagName('span');
+            for (var i = 0, url; i < nodes.length; i++) {
+                if (nodes[i].className.indexOf('dsq-postid') != -1) {
+                    nodes[i].parentNode.setAttribute('data-disqus-identifier', nodes[i].getAttribute('data-dsqidentifier'));
+                    url = nodes[i].parentNode.href.split('#', 1);
+                    if (url.length == 1) { url = url[0]; }
+                    else { url = url[1]; }
+                    nodes[i].parentNode.href = url + '#disqus_thread';
+                }
+            }
+            var s = document.createElement('script'); 
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+        // ]]>
+        </script>
+        <script gapi_processed="true" type="text/javascript" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/plusone_002.js">{lang: 'ru'}</script><script type="text/javascript">
+<!--
+
+var wp_plus_one_redirects_source = new Array();
+var wp_plus_one_redirects_destination = new Array();
+
+Array.prototype.indexOf = function(obj) {
+  var i = this.length;
+  while (i--) {
+    if (this[i] === obj) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function wp_plus_one_clicked(params) { 
+	console.log(params);
+	var idx = wp_plus_one_redirects_source.indexOf(params.href);
+	if (idx > -1)
+		window.location = wp_plus_one_redirects_destination[idx];
+}
+
+-->
+</script>
+
+<script type="text/javascript">
+  window.___gcfg = {lang: 'ru'};
+
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
+
+</div><iframe tabindex="-1" style="width: 1px; height: 1px; position: absolute; top: -100px;" src="%D0%A7%D0%B8%D1%82%D0%B0%D0%B5%D0%BC%20%D1%84%D0%B0%D0%B9%D0%BB%D1%8B,%20%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BB%D0%BE%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%D0%BF%D1%80%D0%B8%20%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8%20JavaScript%20_%20%D0%91%D0%BB%D0%BE%D0%B3%20%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2_files/postmessageRelay.htm" id="oauth2relay412611864" name="oauth2relay412611864"></iframe></body></html>

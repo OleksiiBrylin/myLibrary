@@ -1,0 +1,219 @@
+<div class="group_sidebar">
+  <script>
+    function tag_add(_all_tags_dell, _text_tag){
+        var all_tags = _all_tags_dell.replace(/( {0,}\& {0,})/g, '-');
+      all_tags = all_tags.replace(/ {1,}/g, '-'); 
+      all_tags = all_tags.replace(/!{1,}/g, ''); 
+      	console.log(all_tags);
+        var reg = new RegExp("([+]("+all_tags+"))|("+all_tags+")[+]$|(("+all_tags+")[+])", "g");                     
+        var y = window.location.href.replace(reg,'');  
+        var reg2 = new RegExp("((\/{{collection.handle}})(\/("+all_tags+"))$)|(\/("+all_tags+"))$", "g");
+        y = y.replace(reg2, '/{{collection.handle}}');    
+                      if(y.match(/collections\/{{collection.handle}}$/)){
+          y = y+ "/"+_text_tag;
+        }else{
+          y = y + "+"+_text_tag;
+        }                    
+        $('a[data-tag="'+_text_tag+'"]').attr('href', y);           
+    }    
+  </script>
+  
+  {% if collection.handle == 'all' %}
+  	<!-- side-bar-category (navigation -> Page "collections/all" (side bar Category) )-->
+  		<div class="sb-wrapper">
+          <div class="sb-title">Category</div>
+          <ul class="list-unstyled list-styled aw_icon">
+            {% assign list = linklists['side-bar-category'] %}
+            {% for link in list.links %}      
+            	{% assign link_handle = collection.handle | prepend: '/collections/' %}
+              {% if  link_handle == link.url %}
+            	<li class="active"  >
+                  <a href="/collections/{{categ_name| replace:'filter-',''}}">{{link.title}}</a>
+                </li>
+              {% else %}
+            	<li data-y="{{collection.handle}}|{{ link_handle}}">
+                   <a href="{{link.url}}" >{{link.title}}</a>
+                </li>
+              {% endif %}
+            {% endfor %}            
+          </ul>
+        </div>
+  	<!-- END side-bar-category -->
+  
+  	{% include 'brands_block' %}
+  
+    <!-- Collection block (navigation -> Page "collections/all" (side bar COLLECTIONS) ) -->
+    <div class="sb-wrapper">
+      <div class="sb-title">Collections</div>
+      <ul class="list-unstyled list-styled aw_icon">
+        {% assign list = linklists['collections-all'] %}
+        {% for link in list.links %}      
+          {% assign link_handle = collection.handle | prepend: '/collections/' %}
+          {% if  link_handle == link.url %}
+            <li class="active"  >
+              <a href="/collections/{{categ_name| replace:'filter-',''}}">{{link.title}}</a>
+            </li>
+          {% else %}
+            <li data-y="{{collection.handle}}|{{ link_handle}}">
+              <a href="{{link.url}}" >{{link.title}}</a>
+            </li>
+          {% endif %}
+        {% endfor %}            
+      </ul>
+    </div>
+    <!-- END Collection block -->
+  
+  {% else %}  
+  <!-- first block for categories -->  
+  {% assign tag_name = '' %}
+  {% assign filter_navs = 'filter-new,filter-girls,filter-babies,filter-boys,filter-jewelry,filter-toys,filter-bedding,filter-furniture' | split:"," %}
+  {% for filter_nav in filter_navs %}
+      {% for link in linklists[filter_nav].links %}
+          {% if link.type == 'collection_link' %} 
+              {% if link.url contains collection.handle  %}
+                  {% assign tag_name = linklists[filter_nav].title %}
+                  {% assign categ_name = filter_nav %}
+              {%endif%}            
+          {% endif %}
+      {% endfor %}	
+  {% endfor %}
+  {% if tag_name != blank %}
+
+      {% if categ_name == 'filter-new' %}
+          {% assign all_tags = settings.filter_new_in_val | split:"," %}
+  		  
+      {% elsif categ_name == 'filter-girls' or categ_name == 'filter-babies' %}
+  
+          {% assign all_tags = settings.filter_baby_val | split:"," %}
+      {% elsif categ_name == 'filter-boys' %}
+          {% assign all_tags = settings.filter_boys_val | split:"," %}
+      {% elsif categ_name == 'filter-jewelry' %}
+          {% assign all_tags = settings.filter_jewelry_val | split:"," %}
+  		  {% assign colection_block = 'mega-menu-jewelry-3' %}
+      {% elsif categ_name == 'filter-toys' %}
+          {% assign all_tags = settings.filter_toys_val | split:"," %}
+  		  {% assign colection_block = 'mega-menu-toys-3' %}
+      {% elsif categ_name == 'filter-bedding' %}
+          {% assign all_tags = settings.filter_bedding_val | split:"," %}
+  		  {% assign colection_block = 'mega-menu-bedding-3' %}
+  	  {% elsif categ_name == 'filter-furniture' %}
+          {% assign all_tags = settings.filter_furniture_val | split:"," %}
+  		  {% assign colection_block = 'mega-menu-furniture-3' %} 
+      {% endif %}
+
+  
+  		{% if colection_block != blank %}
+        <!-- Collection block -->
+  		<div class="sb-wrapper">
+          <div class="sb-title">Collections</div>
+          <ul class="list-unstyled list-styled aw_icon">
+            {% assign list = linklists[colection_block] %}
+            {% for link in list.links %}      
+            	{% assign link_handle = collection.handle | prepend: '/collections/' %}
+              {% if  link_handle == link.url %}
+            	<li class="active"  >
+                  <a href="/collections/{{categ_name| replace:'filter-',''}}">{{link.title}}</a>
+                </li>
+              {% else %}
+            	<li data-y="{{collection.handle}}|{{ link_handle}}">
+                   <a href="{{link.url}}" >{{link.title}}</a>
+                </li>
+              {% endif %}
+            {% endfor %}            
+          </ul>
+        </div>
+		<!-- END Collection block -->
+  		{% endif %}
+  
+         <div class="sb-wrapper">
+          <div class="sb-title">{{ tag_name | replace:'Filter-','' }}</div>
+          <ul class="list-unstyled list-styled aw_icon">
+            {% capture all_tags_dell %}{{ all_tags | join: '|' | downcase | replace: ' ', '-' }}{%endcapture%} 
+            {% for t in all_tags %} 
+            {% assign tag = t | strip %}
+            {% capture text_tag %}{{tag | handleize }}{%endcapture%} 
+            {% capture cur_tag %}{{current_tags | handleize }}{%endcapture%} 
+            
+              {% if current_tags contains tag %}
+            	<li class="active"  >
+                  <a data-tag="{{text_tag}}" href="" >{{tag}}</a>
+                </li>     
+            <script>
+              var y = window.location.href.replace(/([+]{{text_tag}})|{{text_tag}}[+]|[\/]{{text_tag}}$/g,'');
+              $('a[data-tag="{{text_tag}}"]').attr('href', y);              
+            </script>
+             {% elsif collection.all_tags contains tag %}    
+                  <li data-tt="{{tag}}|{{current_tags}}">
+                  	<a data-tag="{{text_tag}}" href="/collections/{{collection.handle}}/{{text_tag}}" >{{tag}}</a>
+            	  </li>
+<!--                   <script>
+                    tag_add("{{all_tags_dell}}", "{{text_tag}}");
+                  </script> -->
+              {% endif %}
+            {% endfor %}            
+          </ul>
+        </div>      
+  {% endif %}
+  {% endif%}    
+  <!-- END first block for categories -->
+
+  {% if collection.handle != 'all' %}
+    
+  	  {% include 'brands_block' %}
+
+      {% if categ_name != 'filter-jewelry' and categ_name != 'filter-toys' and categ_name != 'filter-bedding' and categ_name != 'filter-furniture'  %}
+
+          <!-- gender block -->
+          <div class="sb-wrapper">
+            <div class="sb-title">{{ settings.filter_2_name }}</div>
+            <ul class="list-unstyled list-styled aw_icon">
+                {% assign genders = settings.filter_2_val | split:"," %}
+                {% for t in genders %}           
+                  {% assign tag = t | strip %}
+                  {% capture text_tag %}{{tag | handleize }}{%endcapture%} 
+                        {% if current_tags contains tag %}
+                        <li class="active" >
+                          <a data-tag="{{text_tag }}" href="" >{{tag}}</a>
+                        </li>     
+                        <script>
+                          var y = window.location.href.replace(/([+]{{text_tag}})|{{text_tag}}[+]|[\/]{{text_tag}}$/g,'');
+                          $('a[data-tag="{{text_tag}}"]').attr('href', y);              
+                        </script>
+                        {% elsif collection.tags contains tag %}
+                            <li>{{ tag | link_to_add_tag: tag }}</li>
+                        {% else collection.all_tags contains tag %}
+                            <li class="disabled"><a class="art_grey_t">{{ tag }}</a></li>
+                        {% endif %} 
+                    {% endfor %}       
+            </ul>
+          </div>   
+          <!-- END gender block -->
+
+          <!-- age block -->
+          <div class="sb-wrapper">
+            <div class="sb-title">{{ settings.filter_1_name }}</div>
+            <ul class="list-unstyled list-styled aw_icon">
+                {% assign ages = settings.filter_1_val | split:"," %}
+                {% for t in ages %}           
+                    {% assign tag = t | strip %}
+                    {% capture text_tag %}{{tag | handleize }}{%endcapture%} 
+                      {% if current_tags contains tag %}
+                        <li class="active" >
+                          <a data-tag="{{text_tag}}" href="" >{{tag}}</a>
+                        </li>     
+                        <script>
+                          var y = window.location.href.replace(/([+]{{text_tag}})|{{text_tag}}[+]|[\/]{{text_tag}}$/g,'');
+                                                                                                    $('a[data-tag="{{text_tag}}"]').attr('href', y);              
+                        </script>
+                        {% elsif collection.tags contains tag %}
+                            <li>{{ tag | link_to_add_tag: tag }}</li>
+                        {% else collection.all_tags contains tag %}
+                            <li class="disabled"><a class="art_grey_t">{{ tag }}</a></li>
+                        {% endif %} 
+                    {% endfor %}       
+            </ul>
+          </div>   
+          <!-- END age block -->
+      {% endif %}
+  {% endif %}
+</div>

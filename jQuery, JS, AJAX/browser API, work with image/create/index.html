@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <style>
+            body{
+                margin: 50px;
+                position: relative;
+            }
+            .list-view {               
+                width: 100%;
+                height: 100%;
+                border: 1px solid black;
+                position: absolute;
+            }            
+            .resize-wrapper img {
+                display: block;
+            }
+            .resize-handle-s, .resize-handle-e, .line-handle-n, .line-handle-w{
+                background: black;
+                position: absolute;  
+            }
+
+            .resize-handle-se { 
+                position: absolute;
+                bottom: -7px;
+                right: -4px;
+                width: 14px;
+                height: 14px;                
+                cursor: se-resize;
+                border: 1px solid black;
+                background: url("sprite.png") no-repeat -149px -29px #f9f9f9;
+            }
+
+            .resize-handle-ro { 
+                position: absolute;
+                top: -7px;
+                right: -4px;
+                width: 14px; 
+                height: 14px;                
+                cursor: pointer;
+                border: 1px solid black;
+                background: url("sprite.png") no-repeat -71px -27px #f9f9f9;
+            }
+
+            .resize-handle-s {              
+                bottom: 0;
+                height: 1px;
+                width:100%;                
+                cursor: s-resize;
+            }
+
+            .resize-handle-e {          
+                right: 0;
+                top: 0;
+                width: 1px;
+                height:100%;                
+                cursor: e-resize;
+            }
+            .line-handle-n{                
+                left: 0;
+                top: 0;
+                width: 100%;
+                height:1px;                   
+            }
+            .line-handle-w{               
+                left: 0;
+                bottom: 0;
+                width: 1px;
+                height:100%;                     
+            }
+            .heroes{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: auto;
+            }
+            .padd{
+                opacity: 0.1; 
+            }
+            .resize-wrapper{
+                position: absolute;
+                z-index: 40;
+                cursor: move;
+                position: relative;
+                opacity: 0.15;
+            }            
+            .resize-wrapper:hover {
+                opacity: 1;
+                /*transition: all 0.15s ease;*/
+                -webkit-transition: opacity .15s ease-in-out;
+        -moz-transition: opacity .15s ease-in-out;
+        -ms-transition: opacity .15s ease-in-out;
+        -o-transition: opacity .15s ease-in-out;
+        transition: opacity .15s ease-in-out;
+            }
+            .bg{
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 20;
+                background: url("leggins7.png") no-repeat center center transparent;
+                background-size: cover;
+            }
+            .o_h{
+                overflow: hidden;
+            }
+
+        </style>
+    </head>
+    <body >
+        <form id="image-box" action="" enctype="multipart/form-data">
+            <input  id="file-input" name="files" type="file"> image<br>            
+<!--            <input class="param" type="text"  id="img_width" name="img_width" /> width image<br>
+            <input class="param" type="text" id="img_height" name="img_height" /> height image<br>-->
+            <input class="param" type="text" id="box_width" name="box_width" /> box width<br>
+            <input class="param" type="text" id="box_height" name="box_height" /> box height<br>
+            <!--<input class="param" type="text" id="img_ratio" name="img_ratio" /> ratio<br>-->
+            <input class="param" type="text" id="img_rotation" name="img_rotation" /> rotation<br>
+            <input class="param" type="text"  id="img_new_width" name="img_new_width" /> New width image<br>
+            <input class="param" type="text" id="img_new_height" name="img_new_height" /> New height image<br>
+            <input class="param" type="text"  id="img_top" name="img_top" /> Position top<br>
+            <input class="param" type="text" id="img_left" name="img_left"  /> Position left<br>
+            <input class="" type="submit" value="submit" /><br>
+            <br>
+
+        </form>
+        <div id="wrapper">
+
+        </div>        
+
+        <script>
+            var HTTP_HOME = '';
+            $(document).ready(function() {
+                $('form#image-box').submit(function(event) {                    
+                    console.log('load.php');
+                    $.ajax({
+                        url: 'index.php',
+                        type: 'POST',
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            console.log(data);
+                        }
+                    });
+                    event.preventDefault();
+                });
+            });
+            function PushImg(param) {
+                var __construct = function() {
+                    $('input.param').val('0');
+                    console.log('start constructor');
+                    $('#box_width').val(param.width);
+                    $('#box_height').val(param.height);
+                    $('#img_top').val(param.top);
+                    $('#img_left').val(param.left);
+                    $('#img_rotation').val(0);
+                    $(param.wrapper).css({
+                        width: param.width,
+                        height: param.height,
+                        position: 'relative'
+                    });
+                }();
+                document.body.ondragstart = function() {
+                    return false;
+                };
+                if (window.File && window.FileReader && window.FileList && window.Blob) {
+                    $('<div id="ll-vv" class="list-view"><div class="bg"></div></div>').appendTo(param.wrapper)
+                    document.querySelector("#file-input").addEventListener("change", onFileSelect, false);
+                } else {
+                    alert("Your browser does not support File API")
+                }
+
+                function Resizeable(options) {
+
+                    $('.dd').remove();
+                    var elem = options.elem;
+                    var boo = $('<div class="list-view dd o_h"></div>');
+                    boo.append('<img class="heroes bb" src="' + options.src + '" width=' + options.width + '" height="' + options.height + '" />');
+
+                    $(param.wrapper).append(boo);
+
+                    var handleSize = options.handleSize || 1;
+                    var newWidth, newHeight, resizeType;
+
+                    var wrapper = $('<div class="resize-wrapper bb dd"/>');
+
+                    wrapper.prependTo('#ll-vv');
+                    wrapper.append(elem);
+                    var newWidth = param.width - 10;
+                    var newHeight = options.height * (newWidth / options.width);
+
+                    elem = $('.heroes');
+                    elem.width(newWidth);
+                    elem.height(newHeight);
+                    var img = $('.bb');
+                    img.css({
+                        top: param.top,
+                        left: param.left
+                    });
+
+                    wrapper.css({
+                        width: newWidth + handleSize,
+                        height: newHeight + handleSize
+                    });
+                    wrapper.append(
+                            '<div class="line-handle-n"/><div class="line-handle-w"/><div class="resize-handle-s"/><div class="resize-handle-e"/><div class="resize-handle-se"/><div class="resize-handle-ro"/>'
+                            );
+
+                    adjustWrapperSize();
+                    wrapper.on('mousedown', onMouseDown);
+                    function onMouseDown(e) {
+                        var className = e.target.className;
+                        if (className.indexOf("resize-handle-") == 0) {
+                            resizeType = className.slice("resize-handle-".length);
+                            startResize();
+                        } else {
+                            $('body').mouseup(function() {
+                                $('body').unbind('mousemove mouseup');
+                            });
+//                            var img = $('.bb');
+                            var smechenie = img.offset();
+                            var box = $('.list-view').offset();
+                            smechenie.left = e.pageX - smechenie.left;
+                            smechenie.top = e.pageY - smechenie.top;
+                            var top, left;
+                            $('body').mousemove(function(z) {
+                                left = z.pageX - smechenie.left - box.left;
+                                top = z.pageY - smechenie.top - box.top;
+                                img.css('left', left);
+                                img.css('top', top);
+                                $('#img_top').val(top);
+                                $('#img_left').val(left);
+                            });
+                        }
+                        return false;
+                    }
+
+                    function adjustWrapperSize() {
+                        wrapper.css({
+                            width: elem.width() + handleSize,
+                            height: elem.height() + handleSize
+                        });
+                        $('#img_new_width').val(elem.width() + handleSize);
+                        $('#img_new_height').val(elem.height() + handleSize);
+                    }
+
+                    function startResize() {
+                        $(document).on('mousemove.resizeable', onDocumentMouseMove);
+                        $(document).on('mouseup.resizeable', onDocumentMouseUp);
+                    }
+
+                    function onDocumentMouseMove(e) {
+                        var offset = wrapper.offset();
+                        if (~resizeType.indexOf("s")) {
+                            newHeight = Math.max(e.pageY - offset.top, handleSize);
+                            elem.height(newHeight);
+                        }
+                        if (~resizeType.indexOf("e")) {
+                            newWidth = Math.max(e.pageX - offset.left, handleSize);
+                            elem.width(newWidth);
+                            wrapper.width(newWidth+handleSize);
+                      
+                        }
+                        if (~resizeType.indexOf("ro")) {
+                            var cursor, center;
+                            cursor = {x: e.pageX, y: e.pageY};
+                            center = {x: offset.left + parseInt(elem.width()) / 2, y: offset.top + parseInt(elem.height()) / 2};
+                            var angle = (getAngle(cursor, center) * (180 / Math.PI) - 40) * -1;
+                            elem.css({
+                                '-ms-transform': 'rotate(' + angle + 'deg)',
+                                '-webkit-transform': 'rotate(' + angle + 'deg)',
+                                transform: 'rotate(' + angle + 'deg)'
+                            });
+                            $('#img_rotation').val(angle);
+                        }
+
+                        adjustWrapperSize();
+                    }
+
+                    function onDocumentMouseUp() {
+                        $(document).off('.resizeable');
+                    }
+
+                }
+                getAngle = function(ms, ctr) {
+                    var x = ms.x - ctr.x,
+                            y = -ms.y + ctr.y,
+                            hyp = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)),
+                            angle = Math.acos(x / hyp);
+                    if (y < 0) {
+                        angle = 2 * Math.PI - angle;
+                    }
+                    return angle;
+                };
+
+                function onFileSelect(e) {
+                    var f = e.target.files[0], reader = new FileReader;
+                    reader.readAsDataURL(f);
+
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            var img = new Image();
+                            img.src = e.target.result;
+                            if (img.complete) {
+//                                setImgParam(img);
+                                var resizeMe = new Resizeable({
+                                    elem: $('<img class="heroes padd" src="' + img.src + '" width=' + img.width + '" height="' + img.height + '" />'),
+                                    src: img.src,
+                                    width: img.width,
+                                    height: img.height
+                                });
+                            } else {
+                                img.onload = function() {
+//                                    setImgParam(img);
+                                    var resizeMe = new Resizeable({
+                                        elem: $('<img class="heroes padd" src="' + img.src + '" width=' + img.width + '" height="' + img.height + '" />'),
+                                        src: img.src,
+                                        width: img.width,
+                                        height: img.height
+                                    });
+                                };
+                            }
+
+                        };
+                    })(f);
+                }
+            }
+
+            var loadImg = new PushImg({
+                wrapper: '#wrapper',
+                width: 500,
+                height: 571,
+                top: 5,
+                left: 5
+            });
+
+        </script>
+    </body>
+</html>

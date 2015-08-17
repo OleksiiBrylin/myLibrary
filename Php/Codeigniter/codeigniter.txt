@@ -1,0 +1,6 @@
+$this->db->insert_id()
+$CI =& get_instance();    
+$right_login = $CI->config->item('admin_login');
+parse_str(substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?') + 1, strlen($_SERVER['REQUEST_URI']) - strpos($_SERVER['REQUEST_URI'], '?')), $_GET);
+
+if(@fopen(base_url() . $main_info['image_href_big_'.$item], "r"))

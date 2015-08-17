@@ -1,0 +1,83 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>Демонстрация для сайта RUSELLER.COM</title>
+
+
+</head>
+
+<body bgcolor="#eeeeee">
+	<div id="fb-root"></div>
+	<script type="text/javascript">
+		window.fbAsyncInit = function() {
+			FB.init({appId: '145726158803248', status: true, cookie: true, xfbml: true});
+
+			FB.Event.subscribe('auth.login', function(response) {
+				login();
+			});
+			FB.Event.subscribe('auth.logout', function(response) {
+				logout();
+			});
+
+			FB.getLoginStatus(function(response) {
+				if (response.session) {
+					greet();
+				}
+			});
+		};
+		(function() {
+			var e = document.createElement('script');
+			e.type = 'text/javascript';
+			e.src = document.location.protocol +
+				'//connect.facebook.net/en_US/all.js';
+			e.async = true;
+			document.getElementById('fb-root').appendChild(e);
+		}());
+
+		function login(){
+			FB.api('/me', function(response) {
+				alert('Вы удачно зарегистрировались, '+response.name+"!");
+			});
+		}
+		function logout(){
+			alert('Вы удачно вышли из Facebook!');
+		}
+		function greet(){
+			FB.api('/me', function(response) {
+				alert('Добро пожаловать, '+response.name+"!");
+			});
+		}
+
+		function setStatus(){
+		
+			// Проверяем, зарегистрировался ли пользовательы:
+			FB.getLoginStatus(function(response) {
+			  if (response.session) {
+					new_status = document.getElementById('status').value;
+					FB.api(
+					  {
+						method: 'status.set',
+						status: new_status
+					  },
+					  function(response) {
+						if (response == 0){
+							alert('Ваш статус Facebook не обновлен. Установите права для обновления статуса.');
+						}
+						else{
+							alert('Ваш статус Facebook обновлен');
+						}
+					  }
+					);
+			  } else {
+					alert('Сначала зарегистрируейтесь :)');
+			  }
+			});		
+		}
+	</script>
+<p align="center"><fb:login-button autologoutlink='true' perms='email,user_birthday,status_update,publish_stream'></fb:login-button></p>
+<span style="font-size: large;">Содержание сообщения</span>
+<input id="status" size="60" type="text" value="Демонстрационное приложение для сайта RUSELLER.COM" />
+<br/><a href='#' onclick='setStatus(); return false;'>Разместить в ленте новостей Facebook!</a>
+<p align="center"><fb:like-box profile_id="145726158803248" stream="false" header="false"></fb:like-box></p>
+</body>
+</html>

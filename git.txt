@@ -1,0 +1,21 @@
+git status
+**Your branch is up-to-date with 'origin/master'
+git push origin имя_ветки
+
+arthur20kr@gmail.com
+ByrthVfy21
+
+arthur-korn
+ghjcnj12
+
+// глобально
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+
+// не глобально
+$ git config user.name "John Doe"
+$ git config user.email johndoe@example.com
+
+
+// для копирования репозитория
+git clone https://github.com/olegwn/play-to-flirt.git

@@ -1,0 +1,151 @@
+{% comment %} HEADER.liquid (http://sugarandtots.com/collections/all) {%endcomment%}
+
+<div class="collapse navbar-collapse"> 
+    <ul class="nav navbar-nav hoverMenuWrapper">
+      {% for l in linklists[settings.nav_linklist].links %}
+        {% include 'navigation-link' with 0 %}
+      {% endfor %}
+      {% for l in linklists[settings.nav_linklist_right].links %}
+        {% include 'navigation-link' with 'visible-xs-block' %}
+      {% endfor %}  
+    </ul>  
+</div>
+
+
+{% comment %} navigation.liquid {%endcomment%}
+
+{% assign submenu = l.title | handleize %}
+{% for k in (1..8) %}
+	{% capture megamenu_items_1 %}megamenu_items_{{ k }}_1{% endcapture %}
+	{% if settings[megamenu_items_1] == l.title %}
+		{% assign megamenu = true %}
+		{% assign index = k %}
+	{% endif%}
+{% endfor %}
+
+
+{% if megamenu %}
+<li class="{% if l.active %}active {% endif %}dropdown mega-menu background_{{ submenu }} {{ navigation-link }}">
+  <a href="{{ l.url }}" class="dropdown-toggle dropdown-link" data-toggle="dropdown">
+    <span>{{ l.title }}</span>
+    {% if false %}
+    <i class="fa fa-caret-down"></i>
+    {% endif %}
+    <i class="sub-dropdown1 visible-sm visible-md visible-lg"></i>
+    <i class="sub-dropdown visible-sm visible-md visible-lg"></i>
+  </a>
+<!--   % capture index %}{ forloop.index }}% endcapture %} -->
+  
+  
+  
+  <div class="megamenu-container megamenu-container-{{ index }} dropdown-menu">
+    <ul class="sub-mega-menu">
+      {% for j in (1..6) %} 
+        {% capture megamenu_new_label %}megamenu_new_{{ index }}_label_{{ j }}{% endcapture %}
+        {% capture megamenu_hot_label %}megamenu_hot_{{ index }}_label_{{ j }}{% endcapture %}
+        {% capture megamenu_sale_label %}megamenu_sale_{{ index }}_label_{{ j }}{% endcapture %}
+        {% capture megamenu_fea_label %}megamenu_fea_{{ index }}_label_{{ j }}{% endcapture %}
+      	
+      	{% capture megamenu_items %}megamenu_items_{{ index }}_{{ j }}{% endcapture %} 
+        {% capture mega_linklist %}mega_linklist_{{ index }}_{{ j }}{% endcapture %}
+      
+        {% capture megamenu_new_1_label_text_colum_1 %}megamenu_new_1_label_text_colum_1_{{ index }}{% endcapture %}
+        {% capture megamenu_new_1_label_text_colum_2 %}megamenu_new_1_label_text_colum_2_{{ index }}{% endcapture %}
+      
+      <li data="{{settings[mega_linklist]}}">
+        {% assign list = linklists[settings[mega_linklist]] %}
+        
+        <ul>
+          
+          <li class="list-title">
+            {% if j == 1 %}
+             	{{ settings[megamenu_new_1_label_text_colum_1] }}
+            {% elsif j == 3 %}
+           		{{ settings[megamenu_new_1_label_text_colum_2] }}
+            {% else %}
+            	&nbsp;
+            {% endif%} 
+          </li>
+          {% for link in list.links %}
+          <li class="list-unstyled li-sub-mega">
+            <a href="{{ link.url | downcase }}">{{ link.title | escape }}</a>            
+            {% if settings[megamenu_new_label] != "" and settings[megamenu_new_label] == link.title%}
+            	<span class="megamenu-label new-label" >{{'general.mega_menu.new_label'|t}}</span>
+            {% endif %}
+            {% if settings[megamenu_new_label] != "" and settings[megamenu_hot_label] == link.title%}
+            	<span class="megamenu-label hot-label" >{{'general.mega_menu.hot_label'|t}}</span>
+            {% endif %}
+            {% if settings[megamenu_new_label] != "" and settings[megamenu_sale_label] == link.title%}
+            	<span class="megamenu-label sale-label" >{{'general.mega_menu.sale_label'|t}}</span>
+            {% endif %}
+            {% if settings[megamenu_new_label] != "" and settings[megamenu_fea_label] == link.title%}
+            	<span class="megamenu-label feature-label" >{{'general.mega_menu.fea_label'|t}}</span>
+            {% endif %}           
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+      
+    </ul>
+  </div>
+  
+</li>
+
+
+{% else %}
+
+
+{% if 'kids-jewelry' == submenu or 'bedding' == submenu or 'toys' == submenu %}
+  <li class="asd {% if l.active %}active {% endif %}dropdown mega-menu background_{{ submenu }}">
+    <a href="{{ l.url }}" class="dropdown-toggle dropdown-link" data-toggle="dropdown">
+      <span>{{ l.title }}</span>
+      {% if false and navigation-link == 0 %}
+      <i class="fa fa-caret-down"></i>
+      {% endif %}
+      <i class="sub-dropdown1 visible-sm visible-md visible-lg"></i>
+      <i class="sub-dropdown visible-sm visible-md visible-lg"></i>
+    </a>  
+    <div class="megamenu-container megamenu-container-1 dropdown-menu">
+      <ul class="sub-mega-menu back_{{ submenu }}">
+        <li>          
+          <ul>            
+            {% for link in linklists[submenu].links %}
+            <li class="list-unstyled li-sub-mega">
+              <a href="{{ link.url }}">{{ link.title | escape }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </li>
+{% elsif linklists[submenu].links.size > 0 %}
+<li class="nav-item{% if l.active %} active{% endif %} dropdown background_{{ submenu }}">
+  <a href="{{ l.url }}" class="dropdown-toggle dropdown-link" data-toggle="dropdown">
+
+    <span>{{ l.title }}</span>
+    {% if false and navigation-link == 0 %}
+    <i class="fa fa-caret-down"></i>
+    {% endif %}
+
+    <i class="sub-dropdown1  visible-sm visible-md visible-lg"></i>
+    <i class="sub-dropdown visible-sm visible-md visible-lg"></i>
+  </a>
+  <ul class="dropdown-menu">
+    {% for l in linklists[submenu].links %}
+    {% include 'navbar-sub-links' with forloop.index %}
+    {% endfor %}
+  </ul>
+</li>
+{% else %}
+<li class="nav-item{% if l.active %} active{% endif %} background_{{ submenu }}">
+  <a href="{{ l.url }}">
+    <span>{{ l.title }}</span>
+  </a>
+</li>
+{% endif %}
+{% endif %}
+
+
+

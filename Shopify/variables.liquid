@@ -1,0 +1,9 @@
+{{ canonical_url }}
+{% layout none %}
+{{ 'favicon.png' | asset_url }}
+{{ 'global.scss.css' | asset_url | stylesheet_tag }}
+{{ 'wow.min.js' | asset_url | script_tag }}
+
+
+facebook button
+<div id="face_bottom" class="facebook-like"><iframe src="//www.facebook.com/plugins/like.php?href={{ canonical_url | url_param_escape }}?send=false&amp;layout=button_count&amp;width=200&amp;show_faces=false&amp;action=like&amp;share=true&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:21px;" allowTransparency="true"></iframe></div>

@@ -1,0 +1,269 @@
+<div id="pup_bg"></div>
+<div id="vid_cont_m">
+  <div onclick="vid_close();" class="vp_close">x</div>
+  <div class="vid_cont ents">
+    <div class="vp_text" >      
+      {{ 'pop_up_image.jpg' | asset_url | img_tag }}
+    </div>
+    <div class="vid_text" > 
+      <form accept-charset="UTF-8" action="{{ settings.mailchimp_form_action }}" class="infusion-form" method="POST" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"> 
+        <p class="pop_up_a">{{ settings.pop_up_text_1 }}</p>
+        <p class="pop_up_b">{{ settings.pop_up_text_2 }}</p>
+        <p class="pop_up_c">{{ settings.pop_up_text_3 }}</p>
+        <p class="pop_up_c">{{ settings.pop_up_text_4 }}</p>        
+        <div class="infusion-field">
+          <p class="pop_up_label pop_up_c">Email Address</p>
+          <input class="infusion-field-input-container" id="inf_field_FirstName" name="EMAIL" placeholder="Email Address..." type="text">
+        </div>
+        <div class="infusion-field">   
+          <p class="pop_up_label pop_up_c">First Name</p>
+          <input class="infusion-field-input-container" id="inf_field_Email" name="FNAME" placeholder="First Name..." type="text">
+        </div>
+        <div style="position: absolute; left: -5000px;"><input type="text" name="b_cef1091bedc1aee12af5a8618_e975da7a1a" tabindex="-1" value=""></div>
+        <div class="infusion-submit">
+          <input value="Submit" class="btn btn-torquise" type="submit" name="subscribe">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+      function vid_appear() {
+        $('#pup_bg, #vid_cont_m').css({
+          "opacity": "0",
+          'display': 'block'
+        });
+        $('#pup_bg, #vid_cont_m').animate({
+          "opacity": "1"
+        }, {
+          duration: 1000
+        });
+      }
+      function vid_close() {
+        $('#pup_bg, #vid_cont_m, #basketTimer').animate({
+          "opacity": "0"
+        }, 1000, function () {
+          $('#pup_bg, #vid_cont_m, #basketTimer').css({
+            'display': 'none'
+          });
+        });  
+        setCookie("user_ses_in", 'ret', {{ settings.pop_up_repeat }});
+      }
+      function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
+      }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ')
+            c = c.substring(1);
+          if (c.indexOf(name) == 0)
+            return c.substring(name.length, c.length);
+        }
+        return "";
+      }
+      function delay(){
+        var user = getCookie("user_ses_in");
+        if (user == "") {  
+          function ppu_delay() {
+            vid_appear();
+          }
+          setTimeout(ppu_delay, 12000 ); /*setTimeout(ppu_delay, 12000);*/
+        } 
+      }
+      function wb_close(){
+        $('#welcome_block').animate({
+          "opacity": "0"
+        }, 1000, function () {
+          $(this).css({
+            'display': 'none'
+          });
+          setCookie("user_ses_wp", 'ret', 365);
+          delay();     
+        });  
+      }
+      function show_wpa(){         
+        var user = getCookie("user_ses_in");
+        if (user == "" && $( window ).width()>480){
+            function ppu_delay() {
+              vid_appear();
+            }
+            setTimeout(ppu_delay, 12000 );  
+        }
+      }
+      show_wpa();
+    
+  </script>
+<style>
+/* pop up */
+ #vid_cont_m, #pup_bg{
+    display: none;
+    opacity: 0;
+  }
+  
+  #pup_bg {
+    background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1001;
+}
+#vid_cont_m, #basketTimer {
+  width: 730px;
+    background: #fff none repeat scroll 0 0;
+    color: #fff;
+    left: 50%;
+    padding: 10px;
+    position: fixed;
+    text-align: center;
+    top: 50%;    
+  	-ms-transform: translate(-50%, 0px); 
+   	-webkit-transform: translate(-50%, 0px); 
+  	transform: translate(-50%, 0px);
+  
+    z-index: 100001;
+    margin-top: -150px;
+  box-shadow: 1px 2px 6px rgba(0,0,0,0.3);
+}
+div#basketTimer, div#basketTimer .vid_cont {
+    height: auto;
+}
+.vid_cont {
+    display: table;
+  padding: 3% 2% 3% 2%;
+  float: left;
+  height: 300px;
+  width: 100%;
+}
+.pop_up_a, .pop_up_b, .pop_up_c{
+  color: #595959;
+  text-align: left;  
+}
+.pop_up_a{
+  font-family: 'trebuchet ms', 'lucida grande', 'lucida sans unicode', 'lucida sans', tahoma, sans-serif;
+  font-style: italic;
+  line-height: 18px;
+  font-size: 26px;
+}
+.pop_up_b{
+  font-family: 'trebuchet ms', 'lucida grande', 'lucida sans unicode', 'lucida sans', tahoma, sans-serif;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 44px;
+  line-height: 44px;
+}
+.pop_up_c{
+  margin: 0;
+  font-size: 13px;
+  font-family: lucida sans unicode,lucida grande,sans-serif;
+  line-height: 26px;
+}
+.vp_close {
+    color: #595959;
+  cursor: pointer;
+  font-size: 22px;
+  position: absolute;
+  right: 12px;
+  top: 5px;
+  z-index: 110;
+}
+.vid_cont form .infusion-field-input-container {
+    margin: 0;
+  padding: 3px;
+  color: #595959;
+  border: 2px solid rgba(89, 89, 89, 0.5);
+  border-radius: 2px;
+  font: 300 15px/15px "Roboto",sans-serif;
+  height: 32px;
+  text-align: center;
+  width: 100%;
+}
+.vid_cont form .infusion-field {
+  margin-top: 10px;
+    margin-bottom: 10px;
+}
+.vid_cont form .infusion-submit {
+    margin-top: 14px;
+}
+.vid_text{
+  margin-left: 5%;
+  float: left;
+  width: 55%;
+}
+
+.vp_text{
+  float: left; 
+  width: 38%;
+}
+  .pop_up_label{
+    font-weight: bold;
+  }
+.vp_text h3 {
+    color: #fff;
+    font: 28px/25px "Arapey",serif;
+    margin-top: 35px;
+    text-transform: uppercase;
+}
+.vp_text h3 span {
+    color: #8cbadc;
+}
+.vp_text p {
+    font: 300 15px/18px "Roboto",sans-serif;
+    margin: 23px 0 17px;
+}
+@media (min-width: 480px){
+  .for-left-thumb{
+    float: right;
+    width: 75%;
+    margin-left: 5%;
+  }
+  .for-left-thumb + .product-image-thumb{
+      width: 20%;
+      float: right;
+  }
+}
+@media (max-width: 680px){  
+  #vid_cont_m{
+    width: 80%;
+    position: absolute;
+  }
+  .vid_text {  
+    width: 80%;
+    margin: 5% 9%;
+  }
+  .vp_text {
+    width: 80%;
+    margin: 0 10%;
+  }
+}
+@media (max-width: 420px){  
+  #vid_cont_m {
+    width: 90%;
+    position: absolute;
+    margin: 0;
+    padding: 4% 0 0%;
+    min-width: 230px;
+  }
+  .pop_up_a {    
+    font-size: 18px;
+  }
+  .pop_up_b {    
+    font-size: 24px;
+    line-height: 18px;
+  }
+  .pop_up_c {
+    line-height: 20px;
+  }
+
+}
+/* end pop up */
+</style>

@@ -1,0 +1,501 @@
+  <input id="file-input" name="files" type="file"> 
+  <input hidden="hidden" class="param" type="text" id="box_width" name="box_width" />
+  <input hidden="hidden" class="param" type="text" id="box_height" name="box_height" />
+  <input hidden="hidden" class="param" type="text" id="img_rotation" name="img_rotation" />
+  <input hidden="hidden" class="param" type="text"  id="img_new_width" name="img_new_width" />
+  <input hidden="hidden" class="param" type="text" id="img_new_height" name="img_new_height" />
+  <input hidden="hidden" class="param" type="text"  id="img_top" name="img_top" />
+  <input hidden="hidden" class="param" type="text" id="img_left" name="img_left"  />   
+
+
+	<input hidden="hidden" type="text" id="create_image" name="properties[Image]" />
+	<input hidden="hidden" type="text" id="create_image_thumb" name="properties[Image preview]" />
+	<input hidden="hidden" type="text" id="create_info" name="properties[Info]" />
+	<input hidden="hidden" type="text" id="create_id" name="properties[id]" />
+
+<!-- <input  type="button" name="add" class="btn create_submit" data-type="cart"  value="Finalize Design" > -->
+<input  type="button" name="add" class="btn create_submit" data-type="link"  value="Finalize Design" >
+
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+ <script>
+   
+   var mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+   
+   $.ajaxSetup({ cache: true });
+   			var ratio = {};
+            var HTTP_HOME = '';
+            $(document).ready(function() {
+              $('#ConstrainRatio').change(function(){              	
+                var flag = $(this).is(':checked');
+                var elem = $('.heroes');                
+                elem.width(ratio.width*elem.height());
+                $('.bb').width(ratio.width*elem.height());
+              });
+              
+              $(".create_submit").click(function(e){
+                console.log('start');
+                e.preventDefault();
+                if(!$('#file-input')[0].files[0]){
+                  alert("You need to select a photo.");
+                  
+                  return false;
+                }
+                
+                create_loading();
+                var type = $(this).attr('data-type');
+                var data = new FormData();
+                data.append('files', $('#file-input')[0].files[0]);
+                data.append('box_width', $('#box_width').val());
+                data.append('box_height', $('#box_height').val());
+                data.append('img_rotation', $('#img_rotation').val());
+                data.append('img_new_height', $('#img_new_height').val());
+                data.append('img_new_width', $('#img_new_width').val());
+                data.append('img_top', $('#img_top').val());
+                data.append('img_left', $('#img_left').val());
+                
+                $.ajax({
+                        url: '{{ settings.create_host_url }}index.php',
+                        type: 'POST',
+                        data: data,
+                      	crossDomain: true,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {                           
+                          data = JSON.parse(data);
+                            console.log(data);
+                          if(data.status){
+                            create_end();
+                            if(type == 'cart'){
+                              $('input#create_image').val(data.img);
+                              $('input#create_image_thumb').val(data.img_new);
+                              $('input#create_info').val(data.info);
+                              $('input#create_id').val(data.timestamp);
+                              
+                              $('form#add-to-cart-form').submit();
+                            }
+                            if(type == 'link'){
+                              window.location = '{{ shop.url }}/pages/your-design?page='+data.timestamp;
+                            }
+       
+//                              form.submit();
+                            
+                          }else{
+                            create_end();
+                            alert(data.error);                            
+                          }
+                         
+                          
+                        }
+                    });
+                
+              });    
+              
+            });
+   
+           function create_loading(){
+             $(".create_submit").attr('disabled','disabled');
+             $('body').prepend("<div id='create_loading'><div>Saving your design...</div></div>");
+           }
+           function create_end(){
+             $(".create_submit").prop('disabled', false);
+             $("#create_loading").remove();
+           }
+   
+            function PushImg(param) {
+                var __construct = function() {
+                    $('input.param').val('0');                   
+                    $('#box_width').val(param.width);
+                    $('#box_height').val(param.height);
+                    $('#img_top').val(param.top);
+                    $('#img_left').val(param.left);
+                    $('#img_rotation').val(0);
+                    $(param.wrapper).css({
+                        width: param.width,
+                        height: param.height,
+                        position: 'relative'
+                    });
+                }();
+                document.body.ondragstart = function() {
+                    return false;
+                };
+                if (window.File && window.FileReader && window.FileList && window.Blob) {
+                    $('<div id="ll-vv" class="list-view"><div class="bg"></div></div>').appendTo(param.wrapper)
+                    document.querySelector("#file-input").addEventListener("change", onFileSelect, false);
+                } else {
+                    alert("Your browser does not support File API")
+                }
+
+                function Resizeable(options) {
+
+                    $('.dd').remove();
+                    var elem = options.elem;
+                    var boo = $('<div class="list-view dd o_h"></div>');
+                    boo.append('<img class="heroes bb" src="' + options.src + '" width=' + options.width + '" height="' + options.height + '" />');                  
+                  
+                    ratio.width = options.width/options.height;
+                    ratio.height = options.height/options.width;
+                  
+                    $(param.wrapper).append(boo);
+
+                    var handleSize = options.handleSize || 1;
+                    var newWidth, newHeight, resizeType;
+
+                    var wrapper = $('<div class="resize-wrapper bb dd"/>');
+
+                    wrapper.prependTo('#ll-vv');
+                    wrapper.append(elem);
+                    var newWidth = param.width - 10;
+                    var newHeight = options.height * (newWidth / options.width);
+
+                    elem = $('.heroes');
+                    elem.width(newWidth);
+                    elem.height(newHeight);
+                    var img = $('.bb');
+                    img.css({
+                        top: param.top,
+                        left: param.left
+                    });
+
+                    wrapper.css({
+                        width: newWidth + handleSize,
+                        height: newHeight + handleSize
+                    });
+                    wrapper.append(
+                            '<div class="line-handle-n"/><div class="line-handle-w"/><div class="resize-handle-s"/><div class="resize-handle-e"/><div class="resize-handle-se"/><div class="resize-handle-ro"/>'
+                            );
+
+                    adjustWrapperSize();
+                    if (mobile) {
+                        wrapper.on('vmousedown', onMouseDown);
+                    } else {
+                        wrapper.on('mousedown', onMouseDown);
+                    }
+                    function onMouseDown(e) {
+                        var className = e.target.className;
+                        if (className.indexOf("resize-handle-") == 0) {
+                            resizeType = className.slice("resize-handle-".length);
+                            startResize();
+                        } else {
+                            if (mobile) {
+                                $('body').on('vmouseup', function() {
+                                    $('body').unbind('vmousemove vmouseup');
+                                });
+                            } else {
+                                $('body').mouseup(function() {
+                                    $('body').unbind('mousemove mouseup');
+                                });
+                            }
+                            var smechenie = img.offset();
+                            var box = $('.list-view').offset();
+                            smechenie.left = e.pageX - smechenie.left;
+                            smechenie.top = e.pageY - smechenie.top;
+                            var top, left;
+                            if (mobile) {
+                                $('body').on('vmousemove', function(z) {
+                                    top = z.pageX - smechenie.left - box.left;
+                                    left = z.pageY - smechenie.top - box.top;
+                                    img.css('left', top);
+                                    img.css('top', left);
+                                    $('#img_top').val(left);
+                                    $('#img_left').val(top);
+                                });
+                            } else {
+                                $('body').mousemove(function(z) {
+                                    top = z.pageX - smechenie.left - box.left;
+                                    left = z.pageY - smechenie.top - box.top;
+                                    img.css('left', top);
+                                    img.css('top', left);
+                                    $('#img_top').val(left);
+                                    $('#img_left').val(top);
+                                });
+                            }
+                        }
+                        return false;
+                    }
+
+                    function adjustWrapperSize() {
+                        wrapper.css({
+                            width: elem.width() + handleSize,
+                            height: elem.height() + handleSize
+                        });
+                        $('#img_new_width').val(elem.width() + handleSize);
+                        $('#img_new_height').val(elem.height() + handleSize);
+                    }
+
+                    function startResize() {
+                        if (mobile) {
+                            $(document).on('vmousemove.resizeable', onDocumentMouseMove);
+                            $(document).on('vmouseup.resizeable', onDocumentMouseUp);
+                        } else {
+                            $(document).on('mousemove.resizeable', onDocumentMouseMove);
+                            $(document).on('mouseup.resizeable', onDocumentMouseUp);
+                        }
+                    }
+
+                    function onDocumentMouseMove(e) {
+                        var offset = wrapper.offset();
+                      	var ratioFL = $("#ConstrainRatio").is(':checked');
+                      
+                        if (~resizeType.indexOf("s")) {
+                            newHeight = Math.max(e.pageY - offset.top, handleSize);
+                            elem.height(newHeight);
+                            if(ratioFL){
+                                elem.width(ratio.width*newHeight);   
+                            }
+                          	                       
+                        }
+                        if (~resizeType.indexOf("e")) {
+                            newWidth = Math.max(e.pageX - offset.left, handleSize);
+                            elem.width(newWidth);
+                          	wrapper.width(newWidth+handleSize);
+                          	if(ratioFL){
+                                elem.height(ratio.height*(newWidth+handleSize));
+                          		wrapper.height(ratio.height*(newWidth+handleSize));
+                            }                          	
+                        }
+                        if (~resizeType.indexOf("ro")) {
+                            var cursor, center;
+                            cursor = {x: e.pageX, y: e.pageY};
+                            center = {x: offset.left + parseInt(elem.width()) / 2, y: offset.top + parseInt(elem.height()) / 2};
+                            var angle = (getAngle(cursor, center) * (180 / Math.PI) - 40) * -1;
+                            elem.css({
+                                '-ms-transform': 'rotate(' + angle + 'deg)',
+                                '-webkit-transform': 'rotate(' + angle + 'deg)',
+                                transform: 'rotate(' + angle + 'deg)'
+                            });
+                            $('#img_rotation').val(angle);
+                        }
+
+                        adjustWrapperSize();
+                    }
+
+                    function onDocumentMouseUp() {
+                        $(document).off('.resizeable');
+                    }
+
+                }
+                getAngle = function(ms, ctr) {
+                    var x = ms.x - ctr.x,
+                            y = -ms.y + ctr.y,
+                            hyp = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)),
+                            angle = Math.acos(x / hyp);
+                    if (y < 0) {
+                        angle = 2 * Math.PI - angle;
+                    }
+                    return angle;
+                };
+
+                function onFileSelect(e) {
+                  $('.create_link').slideDown();
+                    var f = e.target.files[0], reader = new FileReader;
+                    reader.readAsDataURL(f);
+
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            var img = new Image();
+                            img.src = e.target.result;
+                            if (img.complete) {
+//                                setImgParam(img);
+                                var resizeMe = new Resizeable({
+                                    elem: $('<img class="heroes padd" src="' + img.src + '" width=' + img.width + '" height="' + img.height + '" />'),
+                                    src: img.src,
+                                    width: img.width,
+                                    height: img.height
+                                });
+                            } else {
+                                img.onload = function() {
+//                                    setImgParam(img);
+                                    var resizeMe = new Resizeable({
+                                        elem: $('<img class="heroes padd" src="' + img.src + '" width=' + img.width + '" height="' + img.height + '" />'),
+                                        src: img.src,
+                                        width: img.width,
+                                        height: img.height
+                                    });
+                                };
+                            }
+
+                        };
+                    })(f);
+                }
+            }
+
+            var loadImg = new PushImg({
+                wrapper: '#wrapper',
+                width: 400,
+                height: 457,
+                top: 5,
+                left: 5
+            });
+
+  
+        </script>
+<style>
+  #create_loading{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(186, 185, 185, 0.58);
+    z-index: 100;
+  }
+  #create_loading div{
+    font-family: Roboto;
+    margin-left: -140px;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 15px 20px 15px 60px;
+    border-radius: 6px;
+    color: white;
+    text-transform: capitalize;
+    background: url("{{ 'ajax-loader_2.gif' | asset_url }}") no-repeat 10px center rgba(19, 19, 19, 0.78);
+  }
+  #add-to-cart-form{
+    position: relative;
+    z-index: 80;
+  }
+  .q_checkbox{
+    left: 33%;
+    position: absolute;
+    bottom: -30px;
+    z-index: 60;    
+  }
+  .pants_cl{
+    font-size: 14px;
+  }
+  .pants_cl h2{
+    font-size: 21px;
+  	margin: 0px 0 10px 0;
+  }
+  .pants_cl a{
+    text-decoration: underline;
+  }
+  .pants_cl .share_toolbox {
+    margin-top: 15px;
+  }
+  .pants_cl .share_toolbox ul{    
+    float:none;
+  }
+  #file-input{
+    margin-bottom: 25px;
+  }
+  #wrapper, #wrapper img{
+    -webkit-transition: all .0s ease-in-out;
+    -moz-transition: all .0s ease-in-out;
+    -ms-transition: all .0s ease-in-out;
+    -o-transition: all .0s ease-in-out;
+    transition: all .0s ease-in-out;
+    max-width: none;
+  }
+  .list-view {               
+    width: 100%;
+    height: 100%;
+/*     border: 1px solid black; */
+    position: absolute;
+  }            
+  .resize-wrapper img {
+    display: block;
+  }
+  .resize-handle-s, .resize-handle-e, .line-handle-n, .line-handle-w{
+    background: black;
+    position: absolute;  
+  }
+
+  .resize-handle-se { 
+    z-index:81;
+    position: absolute;
+    bottom: -7px;
+    right: -4px;
+    width: 25px; 
+    height: 25px;                 
+    cursor: se-resize;
+    border: 1px solid black;
+    background: url("{{ 'resize.png' | asset_url }}") no-repeat center center #f9f9f9;
+      background-size: 65% 65%;
+  }
+
+  .resize-handle-ro { 
+    z-index:81;
+    position: absolute;
+    top: -7px;
+    right: -4px;
+    width: 25px; 
+    height: 25px;                
+    cursor: pointer;
+    border: 1px solid black;
+    background: url("{{ 'rotation.png' | asset_url }}") no-repeat center center #f9f9f9;
+    background-size: 65% 65%;  
+  }
+
+  .resize-handle-s {              
+    bottom: 0;
+    height: 1px;
+    width:100%;                
+    cursor: s-resize;
+  }
+
+  .resize-handle-e {          
+    right: 0;
+    top: 0;
+    width: 1px;
+    height:100%;                
+    cursor: e-resize;
+  }
+  .line-handle-n{                
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:1px;                  
+  }
+  .line-handle-w{               
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    height:100%;                     
+  }
+  .heroes{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+  .padd{
+    opacity: 0.1; 
+  }
+  .resize-wrapper{
+    position: absolute;
+    z-index: 40;
+    cursor: move;
+    position: relative;
+    opacity: 0.15;
+  }            
+  #wrapper .resize-wrapper:hover {
+    opacity: 1;
+    /*transition: all 0.15s ease;*/
+    -webkit-transition: opacity .15s ease-in-out;
+    -moz-transition: opacity .15s ease-in-out;
+    -ms-transition: opacity .15s ease-in-out;
+    -o-transition: opacity .15s ease-in-out;
+    transition: opacity .15s ease-in-out;
+  }
+  .bg{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    background: url("{{ 'opa6.png' | asset_url }}") no-repeat center center transparent;
+    background-size: cover;
+  }
+  .o_h{
+    overflow: hidden;
+  }
+  .create_link{
+    display:none;
+  }
+
+        </style>

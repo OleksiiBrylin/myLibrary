@@ -1,0 +1,75 @@
+.universalnye-ikonki-na-css-1 {
+    margin: 30px 0;
+    overflow: hidden;
+}
+
+.universalnye-ikonki-na-css-1 .box {
+	width: 33%;
+	height: 200px;
+	float: left;
+}
+
+.universalnye-ikonki-na-css-1 .box-1 {
+	background: #cf0000;
+}
+
+.universalnye-ikonki-na-css-1 .box-2 {
+	background: #333;
+}
+
+.universalnye-ikonki-na-css-1 .box-3 {
+	background: url("http://www.texturepalace.com/wp-content/uploads/Wet_Summer_series_Vol_1-01-9.jpg");
+}
+
+.universalnye-ikonki-na-css-1 .icon {
+    width: 128px;
+    height: 128px;
+    background: url("https://cdn1.iconfinder.com/data/icons/HTML5/128/HTML_Styling.png");
+    margin: 35px auto 0;
+}
+
+
+
+
+.universalnye-ikonki-na-css-2 {
+    margin: 30px 0;
+    overflow: hidden;
+}
+
+.universalnye-ikonki-na-css-2 .box {
+	width: 33%;
+	height: 200px;
+	float: left;
+}
+
+.universalnye-ikonki-na-css-2 .box-1 {
+	background: #cf0000;
+}
+
+.universalnye-ikonki-na-css-2 .box-2 {
+	background: #333;
+}
+
+.universalnye-ikonki-na-css-2 .box-3 {
+	background: url("http://www.texturepalace.com/wp-content/uploads/Wet_Summer_series_Vol_1-01-9.jpg");
+}
+
+.universalnye-ikonki-na-css-2 .icon {
+    width: 128px;
+    height: 128px;
+    -webkit-mask-image: url("https://cdn1.iconfinder.com/data/icons/HTML5/128/HTML_Styling.png");
+    mask-image: url("https://cdn1.iconfinder.com/data/icons/HTML5/128/HTML_Styling.png");
+    margin: 35px auto 0;
+}
+
+.universalnye-ikonki-na-css-2 .box-1 .icon {
+background: yellow;
+}
+
+.universalnye-ikonki-na-css-2 .box-2 .icon {
+background: lightblue;
+}
+
+.universalnye-ikonki-na-css-2 .box-3 .icon {
+background: url("http://www.texturepalace.com/wp-content/uploads/barge-texture-by-texturepalace-1.jpg");
+}
